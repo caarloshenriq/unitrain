@@ -1,5 +1,4 @@
 import { type SQLiteDatabase } from "expo-sqlite";
-import { updateDatabase } from "./UpdateDatabase";
 
 export async function InitilizeDatabase(db: SQLiteDatabase) {
   await db.execAsync(
