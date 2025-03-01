@@ -1,4 +1,5 @@
 import { type SQLiteDatabase } from "expo-sqlite";
+import { updateDatabase } from "./UpdateDatabase";
 
 export async function InitilizeDatabase(db: SQLiteDatabase) {
   await db.execAsync(
@@ -7,7 +8,8 @@ export async function InitilizeDatabase(db: SQLiteDatabase) {
     CREATE TABLE IF NOT EXISTS workouts (
       workout_id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      weekday TEXT NOT NULL
+      weekday TEXT NOT NULL,
+      active INTEGER DEFAULT 1
     );
 
     CREATE TABLE IF NOT EXISTS exercise (
@@ -15,7 +17,8 @@ export async function InitilizeDatabase(db: SQLiteDatabase) {
       name TEXT NOT NULL,
       description TEXT NOT NULL,
       body_part TEXT NOT NULL,
-      img TEXT
+      img TEXT,
+      active INTEGER DEFAULT 1
     );
 
     CREATE TABLE IF NOT EXISTS workout_exercise (
