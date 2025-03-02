@@ -1,14 +1,12 @@
-import TabsBar from '@/components/TabBar';
 import { useSQLiteContext } from 'expo-sqlite'
 import { View, Text } from 'react-native'
 
-export default function Index() {
+export default function Workouts() {
   const db = useSQLiteContext();
 
   return (
     <View >
-      <Text className='text-center'>Hello World (Home page)</Text>
-      <TabsBar />
+      <Text className='text-center'>Hello World (Workout page)</Text>
     </View>
   )
 }
