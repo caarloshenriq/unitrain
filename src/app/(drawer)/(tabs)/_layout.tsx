@@ -6,7 +6,6 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: "black",
-        // tabBarShowLabel: false,
         headerShown: false,
       }}
     >
@@ -29,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Help"
+        name="help"
         options={{
           title: "Ajuda",
           tabBarIcon: ({ color }) => (
