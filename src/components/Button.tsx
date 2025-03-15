@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   solid: {
-    backgroundColor: "#e5e7eb", // Cinza claro
+    backgroundColor: "#000",
   },
   outline: {
     backgroundColor: "transparent",
