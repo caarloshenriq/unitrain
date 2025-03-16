@@ -33,16 +33,15 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
   async function addWorkout(workout: Omit<Workout, "workout_id">) {
     const { name, weekday } = workout;
     try {
-      await db.runAsync("INSERT INTO workouts (name, weekday) VALUES (?, ?);", [
+      await db.runAsync("INSERT INTO workouts (name, weekday, active) VALUES (?, ?, ?);", [
         name,
         weekday,
+        true
       ]);
 
-      // 🔥 Buscar o último ID inserido
       const result = await db.getFirstAsync<{ workout_id: number }>(
         "SELECT last_insert_rowid() as workout_id;"
       );
-
       await getWorkouts();
 
       return result?.workout_id || null;
