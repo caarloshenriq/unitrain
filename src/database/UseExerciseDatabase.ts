@@ -7,7 +7,9 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
 
   async function getExercises() {
     try {
-      const result = await db.getAllAsync<Exercise>("SELECT * FROM exercise WHERE active = 1;");
+      const result = await db.getAllAsync<Exercise>(
+        "SELECT * FROM exercise WHERE active = 1;"
+      );
       setExercises(result);
       return result;
     } catch (error) {
@@ -29,14 +31,40 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
     }
   }
 
+  async function getDistinctBodyPart() {
+    try {
+      const result = await db.getAllAsync<{ body_part: string }>(
+        "SELECT DISTINCT body_part FROM exercise;"
+      );
+      return result.map((row) => row.body_part) || [];
+    } catch (error) {
+      console.error("Erro ao buscar partes do corpo distintas:", error);
+      return [];
+    }
+  }
+
+  async function getExerciseByBodyPart(body_part: string) {
+    try {
+      const result = await db.getAllAsync<Exercise>(
+        "SELECT * FROM exercise WHERE body_part = ?;",
+        [body_part]
+      );
+      return result || [];
+    } catch (error) {
+      console.error("Erro ao buscar exercícios por parte do corpo:", error);
+      return [];
+    }
+  }
+
   async function addExercise(exercise: Exercise) {
     const { name, description, body_part, img } = exercise;
     try {
-      await db.runAsync(
+      const result = await db.runAsync(
         "INSERT INTO exercise (name, description, body_part, img) VALUES (?, ?, ?, ?);",
         [name, description, body_part, img || null]
       );
       await getExercises();
+      return result;
     } catch (error) {
       console.error("Erro ao adicionar exercício:", error);
     }
@@ -57,9 +85,10 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
 
   async function deleteExercise(exercise_id: number) {
     try {
-      await db.runAsync("UPDATE exercise SET active = 0 WHERE exercise_id = ?;", [
-        exercise_id,
-      ]);
+      await db.runAsync(
+        "UPDATE exercise SET active = 0 WHERE exercise_id = ?;",
+        [exercise_id]
+      );
       await getExercises();
     } catch (error) {
       console.error("Erro ao deletar exercício:", error);
@@ -77,5 +106,7 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
     addExercise,
     updateExercise,
     deleteExercise,
+    getDistinctBodyPart,
+    getExerciseByBodyPart,
   };
 }

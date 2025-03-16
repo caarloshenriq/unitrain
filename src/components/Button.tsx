@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#000",
+    color: "#fff",
     marginLeft: 8,
   },
   smallText: {
