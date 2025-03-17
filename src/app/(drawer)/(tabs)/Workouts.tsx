@@ -43,7 +43,7 @@ export default function Tab() {
             <TouchableOpacity
               key={workout.workout_id}
               className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center"
-              // onPress={() => router.push(`/workout/${workout.workout_id}`)} 
+              onPress={() => router.push(`/workout/${workout.workout_id}`)} 
             >
               <View>
                 <Text className="text-black font-bold text-lg">{workout.name}</Text>

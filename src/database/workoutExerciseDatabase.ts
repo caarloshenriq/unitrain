@@ -17,8 +17,27 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
     }
   }
 
+  async function getWorkoutDetail(workoutId: number) {
+    try {
+      const result = await db.getAllAsync<{
+        name: string;
+        body_part: string;
+        repetition: number;
+        series: number;
+      }>(
+        "select e.name, e.body_part, we.repetition, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id where we.workout_id = ?;",
+        [workoutId]
+      );
+      return result;
+    } catch (error) {
+      console.log("Erro ao buscar detalhes do treino:", error);
+      return [];
+    }
+  }
+
   return {
     workoutExercise,
     createWorkoutExercise,
+    getWorkoutDetail,
   };
 }
