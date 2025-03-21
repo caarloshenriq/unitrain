@@ -22,10 +22,11 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
       const result = await db.getAllAsync<{
         name: string;
         body_part: string;
+        description: string;
         repetition: number;
         series: number;
       }>(
-        "select e.name, e.body_part, we.repetition, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id where we.workout_id = ?;",
+        "select e.name, e.body_part, we.repetition, e.description, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id where we.workout_id = ?;",
         [workoutId]
       );
       return result;
