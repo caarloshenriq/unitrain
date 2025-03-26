@@ -13,7 +13,7 @@ export default function Tab() {
   return (
     <View className="bg-white p-4">
       <View className="flex flex-row justify-between">
-        <Text>Estatisticas</Text>
+        <Text>Home</Text>
       
       </View>
     </View>

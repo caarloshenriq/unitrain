@@ -6,7 +6,7 @@ export default function help() {
 
   return (
       <View>
-        <Text className="text-center">Hello World (Help page)</Text>
+        <Text className="text-center">Help</Text>
       </View>
   );
 }
