@@ -1,21 +1,44 @@
+import {useState} from "react";
+import {Pressable, Text, View} from "react-native";
+import {Ionicons} from "@expo/vector-icons";
 import ExportData from "@/components/ExportData";
-import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import ImportData from "@/components/ImportData";
+import {SQLiteDatabase} from "expo-sqlite";
 
-export default function Backup() {
+export default function Backup(db: SQLiteDatabase) {
+    const [exportModalVisible, setExportModalVisible] = useState(false);
+    const [importModalVisible, setImportModalVisible] = useState(false);
+
+    const handleExport = () => {
+        console.log("Exportando dados...");
+        setExportModalVisible(false);
+    };
+
+    const handleImport = () => {
+        console.log("Importando dados...");
+        setImportModalVisible(false);
+    }
+
     return (
         <View className="bg-white flex-1">
             <View className="flex justify-center gap-2 items-center flex-1">
-                <Pressable onPress={() => <ExportData />} className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-col justify-between items-center">
-                    <Ionicons name="arrow-up-sharp" size={40} color="gray" />
-                    <Text className="text-black font-bold text-lg">Exportar</Text>
+                <Pressable onPress={() => setExportModalVisible(true)}
+                           className="bg-gray-300 p-6 rounded-lg mb-4 shadow-sm flex-col justify-between items-center">
+                    <Ionicons name="arrow-up-sharp" size={80} color="gray"/>
+                    <Text className="text-black font-bold text-2xl">Exportar</Text>
                 </Pressable>
 
-                <Pressable onPress={() => {}} className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-col justify-between items-center">
-                    <Ionicons name="arrow-down-sharp" size={40} color="gray" />
-                    <Text className="text-black font-bold text-lg">Importar</Text>
+                <Pressable onPress={() => {
+                    setImportModalVisible(true)
+                }}
+                           className="bg-gray-300 p-6 rounded-lg mb-4 shadow-sm flex-col justify-between items-center">
+                    <Ionicons name="arrow-down-sharp" size={80} color="gray"/>
+                    <Text className="text-black font-bold text-2xl">Importar</Text>
                 </Pressable>
             </View>
+
+            {exportModalVisible && <ExportData onClose={() => setExportModalVisible(false)} db={db}/>}
+            {importModalVisible && <ImportData onClose={() => setImportModalVisible(false)}/>}
         </View>
     );
 }
