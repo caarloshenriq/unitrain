@@ -23,7 +23,7 @@ export default function Layout() {
                         options={{ title: 'Estatísticas', headerShown: true }}
                     />
                     <Drawer.Screen
-                        name="exercises"
+                        name="(exercise)/index"
                         options={{ title: 'Exercícios', headerShown: true }}
                     />
                     <Drawer.Screen
@@ -46,6 +46,14 @@ export default function Layout() {
                         name="(workout)/[id]"
                         options={{
                             title: "Detalhe do treino",
+                            drawerItemStyle: { display: 'none' },
+                            headerShown: true,
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="(exercise)/newExercise"
+                        options={{
+                            title: "Novo Exercício",
                             drawerItemStyle: { display: 'none' },
                             headerShown: true,
                         }}
