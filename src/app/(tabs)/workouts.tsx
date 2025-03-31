@@ -6,12 +6,13 @@ import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {Workout} from '@/types/Workout';
 
 export default function Tab() {
   const db = useSQLiteContext();
   const router = useRouter();
   const { getWorkouts } = useWorkoutDatabase(db);
-  const [workouts, setWorkouts] = useState<{ workout_id: number; name: string; weekday: string }[]>([]);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
 
   useEffect(() => {
     async function fetchWorkouts() {

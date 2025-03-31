@@ -23,6 +23,10 @@ export default function Layout() {
                         options={{ title: 'Estatísticas', headerShown: true }}
                     />
                     <Drawer.Screen
+                        name="exercises"
+                        options={{ title: 'Exercícios', headerShown: true }}
+                    />
+                    <Drawer.Screen
                         name="(config)/theme"
                         options={{
                             title: "Tema",

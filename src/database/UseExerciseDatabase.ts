@@ -8,7 +8,7 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
   async function getExercises() {
     try {
       const result = await db.getAllAsync<Exercise>(
-        "SELECT * FROM exercise WHERE active = 1;"
+        "SELECT * FROM exercise WHERE active = 1 ORDER BY body_part ASC;"
       );
       setExercises(result);
       return result;
