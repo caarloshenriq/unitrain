@@ -1,14 +1,16 @@
-import {Modal, Pressable, Text, View} from "react-native";
-import {exportBackup} from "@/scripts/backup";
+import { Modal, Pressable, Text, View } from "react-native";
+import { exportBackup } from "@/scripts/backup";
 import * as Sharing from "expo-sharing";
-import {SQLiteDatabase} from "expo-sqlite";
+import { SQLiteDatabase } from "expo-sqlite";
 
-export default function ExportData({onClose, db}: { onClose: () => void, db: SQLiteDatabase }) {
+export default function ExportData({ onClose, db }: { onClose: () => void, db: SQLiteDatabase }) {
     const handleExport = async () => {
         try {
             const fileUri = await exportBackup(db);
 
-            await Sharing.shareAsync(fileUri);
+            if (await Sharing.isAvailableAsync()) {
+                await Sharing.shareAsync(fileUri);
+            }
         } catch (error) {
             console.error("Error exporting data:", error);
         }
