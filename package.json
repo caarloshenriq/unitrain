@@ -14,8 +14,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+<<<<<<< HEAD
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-picker/picker": "^2.11.0",
+=======
+    "@react-native-picker/picker": "^2.9.0",
+>>>>>>> 0929fc7 ([DEPS] atualizando dependencias para evitar bugs)
     "@react-navigation/drawer": "^7.1.2",
     "@react-navigation/native": "^7.0.14",
     "@supabase/supabase-js": "^2.49.3",
@@ -33,7 +37,7 @@
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "0.76.7",
+    "react-native": "^0.76.8",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
     "react-native-safe-area-context": "4.12.0",
