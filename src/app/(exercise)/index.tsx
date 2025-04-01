@@ -72,7 +72,7 @@ export default function Exercises() {
             <TouchableOpacity
               key={exercise.exercise_id}
               className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center"
-              onPress={() => router.push(`/(workout)/${exercise.exercise_id}`)}
+              onPress={() => router.push(`/(exercise)/${exercise.exercise_id}`)}
             >
               <View>
                 <Text className="text-black font-bold text-lg">

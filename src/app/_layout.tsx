@@ -58,6 +58,14 @@ export default function Layout() {
                             headerShown: true,
                         }}
                     />
+                    <Drawer.Screen
+                        name="(exercise)/[id]"
+                        options={{
+                            title: "Detalhe do Exercício",
+                            drawerItemStyle: { display: 'none' },
+                            headerShown: true,
+                        }}
+                    />
                 </Drawer>
             </SQLiteProvider>
         </GestureHandlerRootView>
