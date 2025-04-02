@@ -69,12 +69,19 @@ export default function WorkoutDetails() {
           {exercise?.description}
         </Text>
       </View>
-      <View className="flex items-end">
+      <View className="flex flex-row justify-end items-center">
+        <Button
+          icon={<Ionicons name="create" size={20} color="white" />}
+          onPress={() => router.push(`/form?id=${id}`)}
+          small={true}
+        />
+        <View className="ml-2">
         <Button
           icon={<Ionicons name="trash" size={20} color="white" />}
           onPress={handleDelete}
           small={true}
         />
+        </View>
       </View>
     </ScrollView>
   );

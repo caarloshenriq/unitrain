@@ -45,7 +45,7 @@ export default function Exercises() {
       <View className="flex flex-row justify-end pt-4 px-4">
         <Button
           icon={<Ionicons name="add" size={20} color="white" />}
-          onPress={() => router.push("/newExercise")}
+          onPress={() => router.push("/form")}
           small={true}
         />
       </View>

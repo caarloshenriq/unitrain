@@ -51,7 +51,7 @@ export default function Layout() {
                         }}
                     />
                     <Drawer.Screen
-                        name="(exercise)/newExercise"
+                        name="(exercise)/form"
                         options={{
                             title: "Novo Exercício",
                             drawerItemStyle: { display: 'none' },
