@@ -1,14 +1,17 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
+import headerStyle from "@/constants/HeaderStyle";
 
 export default function TabsLayout() {
     return (
         <Tabs
             screenOptions={{
+                headerStyle: {backgroundColor: headerStyle.headerStyle.backgroundColor},
+                headerTintColor: headerStyle.headerTintColor,
                 tabBarActiveTintColor: "#000000",
                 headerShown: true,
-                headerLeft: () => <DrawerToggleButton />,
+                headerLeft: () => <DrawerToggleButton tintColor={headerStyle.headerTintColor} />,
             }}
         >
             <Tabs.Screen
@@ -37,12 +40,6 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) => (
                         <Ionicons size={28} name="help-circle-outline" color={color} />
                     ),
-                }}
-            />
-            <Tabs.Screen
-                name="newWorkout"
-                options={{
-                    href: null,
                 }}
             />
         </Tabs>
