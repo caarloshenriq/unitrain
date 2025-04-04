@@ -1,15 +1,16 @@
+import headerStyle from "@/constants/HeaderStyle";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Stack } from "expo-router";
 
 export default function Layout() {
     return (
-        <Stack>
+        <Stack screenOptions={{headerStyle: headerStyle.headerStyle}}>
             <Stack.Screen
                 options={{
                     title: "Treinos",
                     headerShown: true,
                     headerLeft: () => <DrawerToggleButton />,
-
+                    headerStyle: headerStyle.headerStyle,
                 }}
                 name="index"
             />
