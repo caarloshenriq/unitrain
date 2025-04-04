@@ -25,7 +25,7 @@ export default function WorkoutDetails() {
             const workoutExercises = await getWorkoutDetail(Number(id));
             const exercisesWithDescription = workoutExercises.map(exercise => ({
                 ...exercise,
-                description: exercise.description || "No description available",
+                description: exercise.description || "Sem descrição disponível",
             }));
             setExercises(exercisesWithDescription);
         }

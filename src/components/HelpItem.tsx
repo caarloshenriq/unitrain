@@ -20,9 +20,11 @@ export default function HelpItem({question, answer}: HelpItemProps) {
     };
 
     return (
-        <View className="mb-4 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+        // <View className="mb-4 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+            <View className="mb-4 bg-white p-4 rounded-lg shadow-sm">
             <Pressable onPress={toggleExpand} className="flex-row justify-between items-center">
-                <Text className="text-black dark:text-white font-bold text-lg flex-1">{question}</Text>
+                {/* <Text className="text-black dark:text-white font-bold text-lg flex-1">{question}</Text> */}
+                <Text className="text-black font-bold text-lg flex-1">{question}</Text>
                 <Ionicons
                     name={expanded ? "chevron-up" : "chevron-down"}
                     size={24}
@@ -31,7 +33,8 @@ export default function HelpItem({question, answer}: HelpItemProps) {
             </Pressable>
             {expanded && (
                 <View className="mt-2">
-                    <Text className="text-gray-700 dark:text-gray-300 text-base">{answer}</Text>
+                    {/* <Text className="text-gray-700 dark:text-gray-300 text-base">{answer}</Text> */}
+                    <Text className="text-gray-700 text-base">{answer}</Text>
                 </View>
             )}
         </View>

@@ -5,22 +5,30 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import {Workout} from '@/types/Workout';
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from "react-native";
+import { Workout } from "@/types/Workout";
 
 export default function Tab() {
   const db = useSQLiteContext();
   const router = useRouter();
   const { getWorkouts } = useWorkoutDatabase(db);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const [refreshing, setRefreshing] = useState(false); // Estado para controlar o refresh
+
+  const fetchWorkouts = async () => {
+    const data = await getWorkouts();
+    setWorkouts(data || []);
+  };
 
   useEffect(() => {
-    async function fetchWorkouts() {
-      const data = await getWorkouts();
-      setWorkouts(data || []);
-    }
     fetchWorkouts();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true); // Ativa o estado de "refreshing"
+    await fetchWorkouts(); // Recarrega os dados
+    setRefreshing(false); // Desativa o estado de "refreshing"
+  };
 
   return (
     <View className="bg-white p-4 flex-1">
@@ -33,7 +41,12 @@ export default function Tab() {
           small={true}
         />
       </View>
-      <ScrollView className="mt-4">
+      <ScrollView
+        className="mt-4"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {workouts.length === 0 ? (
           <Text className="text-gray-500 text-center mt-10">Nenhum treino cadastrado.</Text>
         ) : (

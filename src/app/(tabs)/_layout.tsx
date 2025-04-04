@@ -1,4 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
@@ -6,7 +7,8 @@ export default function TabsLayout() {
         <Tabs
             screenOptions={{
                 tabBarActiveTintColor: "#000000",
-                headerShown: false,
+                headerShown: true,
+                headerLeft: () => <DrawerToggleButton />,
             }}
         >
             <Tabs.Screen
@@ -19,9 +21,10 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="workouts"
+                name="(workout)"
                 options={{
                     title: "Treinos",
+                    headerShown: false,
                     tabBarIcon: ({ color }) => (
                         <Ionicons size={28} name="clipboard" color={color} />
                     ),

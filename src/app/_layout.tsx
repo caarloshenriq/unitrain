@@ -3,7 +3,6 @@ import { SQLiteProvider } from "expo-sqlite";
 import "../styles/global.css";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default function Layout() {
     return (
@@ -12,58 +11,26 @@ export default function Layout() {
                 <Drawer>
                     <Drawer.Screen
                         name="(tabs)"
-                        options={{ title: 'Principal', headerShown: true }}
+                        options={{ title: 'Principal', headerShown: false }}
                     />
                     <Drawer.Screen
-                        name="config"
-                        options={{ title: 'Configurações', headerShown: true }}
+                        name="(config)"
+                        options={{ title: 'Configurações', headerShown: false }}
                     />
                     <Drawer.Screen
                         name="statistics"
                         options={{ title: 'Estatísticas', headerShown: true }}
                     />
                     <Drawer.Screen
-                        name="(exercise)/index"
-                        options={{ title: 'Exercícios', headerShown: true }}
-                    />
-                    <Drawer.Screen
-                        name="(config)/theme"
-                        options={{
-                            title: "Tema",
-                            drawerItemStyle: { display: 'none' },
-                            headerShown: true,
-                        }}
-                    />
-                    <Drawer.Screen
-                        name="(config)/backup"
-                        options={{
-                            title: "Backup",
-                            drawerItemStyle: { display: 'none' },
-                            headerShown: true,
-                        }}
+                        name="(exercise)"
+                        options={{ title: 'Exercícios', headerShown: false }}
                     />
                      <Drawer.Screen
-                        name="(workout)/[id]"
+                        name="(workout)"
                         options={{
-                            title: "Detalhe do treino",
+                            // title: "Detalhe do treino",
                             drawerItemStyle: { display: 'none' },
-                            headerShown: true,
-                        }}
-                    />
-                    <Drawer.Screen
-                        name="(exercise)/form"
-                        options={{
-                            title: "Novo Exercício",
-                            drawerItemStyle: { display: 'none' },
-                            headerShown: true,
-                        }}
-                    />
-                    <Drawer.Screen
-                        name="(exercise)/[id]"
-                        options={{
-                            title: "Detalhe do Exercício",
-                            drawerItemStyle: { display: 'none' },
-                            headerShown: true,
+                            headerShown: false,
                         }}
                     />
                 </Drawer>
