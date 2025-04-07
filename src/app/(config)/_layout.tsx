@@ -1,15 +1,17 @@
-import headerStyle from "@/constants/HeaderStyle";
-import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Stack } from "expo-router";
+import {createHeaderOptions} from "@/constants/headerOptions";
+import {DrawerToggleButton} from "@react-navigation/drawer";
+import {Stack} from "expo-router";
+import {useTheme} from "@/components/ThemeProvider";
 
 export default function Layout() {
+    const {resolvedTheme} = useTheme();
     return (
-        <Stack screenOptions={{headerStyle: headerStyle.headerStyle}}>
+        <Stack screenOptions={{...createHeaderOptions(resolvedTheme)}}>
             <Stack.Screen
                 options={{
                     title: "Configurações",
                     headerShown: true,
-                    headerLeft: () => <DrawerToggleButton />,
+                    headerLeft: () => <DrawerToggleButton/>,
                 }}
                 name="index"
             />

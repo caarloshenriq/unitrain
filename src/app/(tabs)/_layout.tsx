@@ -1,25 +1,43 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { DrawerToggleButton } from "@react-navigation/drawer";
-import { Tabs } from "expo-router";
-import headerStyle from "@/constants/HeaderStyle";
+import {DrawerToggleButton} from "@react-navigation/drawer";
+import {Tabs} from "expo-router";
+import {createHeaderOptions} from "@/constants/headerOptions";
+import {useTheme} from "@/components/ThemeProvider";
 
 export default function TabsLayout() {
+    const {resolvedTheme} = useTheme();
+    const {
+        headerStyle,
+        headerTintColor,
+        headerTitleStyle,
+        headerBackTitleVisible,
+        headerTitleAlign,
+        headerShadowVisible,
+        headerStatusBarHeight, // pode estar undefined no iOS
+    } = createHeaderOptions(resolvedTheme);
     return (
         <Tabs
             screenOptions={{
-                headerStyle: {backgroundColor: headerStyle.headerStyle.backgroundColor},
-                headerTintColor: headerStyle.headerTintColor,
                 tabBarActiveTintColor: "#000000",
                 headerShown: true,
-                headerLeft: () => <DrawerToggleButton tintColor={headerStyle.headerTintColor} />,
+                headerLeft: () => (
+                    <DrawerToggleButton tintColor={headerTintColor} />
+                ),
+                headerStyle,
+                headerTintColor,
+                ...headerTitleStyle,
+                headerBackTitleVisible,
+                ...headerTitleAlign,
+                headerShadowVisible,
+                ...(headerStatusBarHeight && { headerStatusBarHeight }),
             }}
         >
             <Tabs.Screen
                 name="index"
                 options={{
                     title: "Home",
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons size={28} name="home" color={color} />
+                    tabBarIcon: ({color}) => (
+                        <Ionicons size={28} name="home" color={color}/>
                     ),
                 }}
             />
@@ -28,8 +46,8 @@ export default function TabsLayout() {
                 options={{
                     title: "Treinos",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons size={28} name="clipboard" color={color} />
+                    tabBarIcon: ({color}) => (
+                        <Ionicons size={28} name="clipboard" color={color}/>
                     ),
                 }}
             />
@@ -37,8 +55,8 @@ export default function TabsLayout() {
                 name="help"
                 options={{
                     title: "Ajuda",
-                    tabBarIcon: ({ color }) => (
-                        <Ionicons size={28} name="help-circle-outline" color={color} />
+                    tabBarIcon: ({color}) => (
+                        <Ionicons size={28} name="help-circle-outline" color={color}/>
                     ),
                 }}
             />
