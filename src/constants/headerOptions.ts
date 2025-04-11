@@ -17,7 +17,7 @@ export const createHeaderOptions = (theme: ThemeType) => {
             letterSpacing: 0.5,
         },
         headerBackTitleVisible: false,
-        headerTitleAlign: "center",
+        headerTitleAlign: "center" as "center",
         headerShadowVisible: false,
         ...(Platform.OS === "android" && {
             headerStatusBarHeight: 24,

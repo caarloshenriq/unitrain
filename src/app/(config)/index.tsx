@@ -12,7 +12,7 @@ export default function Config() {
             {/* <View className="bg-white flex-1"> */}
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-4">
                 <View className="flex justify-top gap-4 items-center flex-1">
-                    <View className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full">
+                    <View className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full">
                     {/* <View className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"> */}
                         <View className="flex-1">
                             <Text className="text-black dark:text-white font-bold text-lg">Tema</Text>
@@ -29,17 +29,15 @@ export default function Config() {
                         />
                     </View>
                     <Pressable
-                        className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"
+                        className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"
                         // className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"
                         onPress={() => router.navigate("/(config)/backup")}
                     >
                         <View className="flex-1">
                             <Text className="text-black dark:text-white font-bold text-lg">Backup</Text>
-                            {/* <Text className="text-black font-bold text-lg">Backup</Text> */}
                             <Text className="text-gray-500 dark:text-gray-400">Faça backup dos seus dados</Text>
-                            <Text className="text-gray-500">Faça backup dos seus dados</Text>
                         </View>
-                        <Ionicons name="chevron-forward" size={24} color={theme.resolvedTheme === "dark" ? "#ccc" : "gray"} />
+                        <Ionicons name="chevron-forward" size={24} color={theme.resolvedTheme === "dark" ? "white" : "gray"} />
                     </Pressable>
                 </View>
             </ScrollView>
