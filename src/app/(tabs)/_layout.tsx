@@ -10,7 +10,6 @@ export default function TabsLayout() {
         headerStyle,
         headerTintColor,
         headerTitleStyle,
-        headerBackTitleVisible,
         headerTitleAlign,
         headerShadowVisible,
         headerStatusBarHeight, // pode estar undefined no iOS
@@ -18,7 +17,11 @@ export default function TabsLayout() {
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: "#000000",
+                tabBarActiveTintColor: resolvedTheme === "dark" ? "lightgray": "black",
+                tabBarStyle: {
+                    backgroundColor: resolvedTheme === "dark" ? "#1e1e1e" : "#f9f9f9",
+                    borderTopWidth: 0,
+                },
                 headerShown: true,
                 headerLeft: () => (
                     <DrawerToggleButton tintColor={headerTintColor} />
@@ -26,8 +29,7 @@ export default function TabsLayout() {
                 headerStyle,
                 headerTintColor,
                 ...headerTitleStyle,
-                headerBackTitleVisible,
-                ...headerTitleAlign,
+                ...(typeof headerTitleAlign === "object" ? headerTitleAlign : {}),
                 headerShadowVisible,
                 ...(headerStatusBarHeight && { headerStatusBarHeight }),
             }}
