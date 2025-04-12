@@ -1,4 +1,5 @@
 import { type SQLiteDatabase } from "expo-sqlite";
+import { migrateWorkoutsInfoTable } from "./migrateWorkoutsInfoTable";
 
 export async function InitilizeDatabase(db: SQLiteDatabase) {
   await db.execAsync(
@@ -41,10 +42,18 @@ export async function InitilizeDatabase(db: SQLiteDatabase) {
     CREATE TABLE IF NOT EXISTS workouts_info (
       workouts_info_id INTEGER PRIMARY KEY AUTOINCREMENT,
       workout_id INTEGER NOT NULL,
-      weight FLOAT NOT NULL,
+      time FLOAT NOT NULL,
       date DATE NOT NULL,
+      FOREIGN KEY (workout_id) REFERENCES workouts(workout_id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS workout_progress (
+      workout_progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      workout_info_id INTEGER NOT NULL,
       exercise_id INTEGER NOT NULL,
-      FOREIGN KEY (workout_id) REFERENCES workouts(workout_id) ON DELETE CASCADE,
+      weight FLOAT NOT NULL,
+      repetition INTEGER NOT NULL,
+      FOREIGN KEY (workout_info_id) REFERENCES workouts(workout_info_id) ON DELETE CASCADE,
       FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id) ON DELETE CASCADE
     );
     
@@ -151,4 +160,5 @@ export async function InitilizeDatabase(db: SQLiteDatabase) {
       (100, 'Remada com Barra', 'Realize o movimento com a barra, focando a contração das costas', 'Costas');
     `
   );
+  await migrateWorkoutsInfoTable(db);
 }
