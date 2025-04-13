@@ -54,7 +54,6 @@ export async function populateExerciseTable(db: SQLiteDatabase) {
       `);
 
     const hasBodyPart = existingColumns.some((col) => col.name === "body_part");
-    console.log(hasBodyPart);
 
     if (hasBodyPart) {
       console.log("Migrando tabela exercise...");
@@ -69,7 +68,7 @@ export async function populateExerciseTable(db: SQLiteDatabase) {
             body_part_id INTEGER NOT NULL,
             img TEXT,
             active INTEGER DEFAULT 1,
-            FOREIGN KEY (body_part_id) REFERENCES body_part(body_part_id) ON DELETE CASCADE,
+            FOREIGN KEY (body_part_id) REFERENCES body_part(body_part_id) ON DELETE CASCADE
           );
         `);
 
@@ -78,7 +77,7 @@ export async function populateExerciseTable(db: SQLiteDatabase) {
       console.log("Migração concluída com sucesso.");
     }
 
-    await db.execAsync(`INSERT OR IGNORE INTO exercise (exercise_id, name, description, body_part) VALUES
+    await db.execAsync(`INSERT OR IGNORE INTO exercise (exercise_id, name, description, body_part_id) VALUES
         (1, 'Supino Reto', 'Deite-se no banco, mantenha os pés firmes e execute', 1),
         (2, 'Supino Inclinado', 'Realize o movimento com foco na parte superior do peitoral', 2),
         (3, 'Supino Declinado', 'Execute o movimento para trabalhar a parte inferior do peitoral', 3),

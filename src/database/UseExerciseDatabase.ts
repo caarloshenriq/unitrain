@@ -11,9 +11,8 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
       const result = await db.getAllAsync<Exercise>(
         "SELECT e.exercise_id, e.name, e.description, b.name as body_part FROM exercise e INNER JOIN body_part b ON e.body_part_id = b.body_part_id WHERE active = 1 ORDER BY body_part ASC;"
       );
-      console.log(result);
-      // setExercises(result);
-      // return result;
+      setExercises(result);
+      return result;
     } catch (error) {
       console.error("Erro ao buscar exercícios:", error);
       return [];
@@ -48,7 +47,7 @@ export function useExerciseDatabase(db: SQLiteDatabase) {
   async function getExerciseByBodyPart(body_part: number) {
     try {
       const result = await db.getAllAsync<Exercise>(
-        "SELECT e.exercise_id, e.name, e.description, b.name as body_part FROM exercise e INNER JOIN body_part b ON e.body_part_id = b.body_part_id FROM exercise WHERE body_part_id = ?;",
+        "SELECT e.exercise_id, e.name, e.description, b.name as body_part FROM exercise e INNER JOIN body_part b ON e.body_part_id = b.body_part_id WHERE e.body_part_id = ?;",
         [body_part]
       );
       return result || [];
