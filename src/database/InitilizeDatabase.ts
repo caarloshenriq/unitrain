@@ -53,7 +53,7 @@ export async function InitilizeDatabase(db: SQLiteDatabase) {
       exercise_id INTEGER NOT NULL,
       weight FLOAT NOT NULL,
       repetition INTEGER NOT NULL,
-      FOREIGN KEY (workout_info_id) REFERENCES workouts(workout_info_id) ON DELETE CASCADE,
+      FOREIGN KEY (workout_info_id) REFERENCES workouts_info(workouts_info_id) ON DELETE CASCADE,
       FOREIGN KEY (exercise_id) REFERENCES exercise(exercise_id) ON DELETE CASCADE
     );
     
