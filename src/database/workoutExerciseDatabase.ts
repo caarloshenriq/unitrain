@@ -25,8 +25,9 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
         description: string;
         repetition: number;
         series: number;
+        exercise_id: number;
       }>(
-        "select e.name, e.body_part, we.repetition, e.description, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id where we.workout_id = ?;",
+        "select e.name, e.exercise_id,e.body_part, we.repetition, e.description, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id where we.workout_id = ?;",
         [workoutId]
       );
       return result;
