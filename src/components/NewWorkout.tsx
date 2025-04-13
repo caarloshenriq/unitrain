@@ -12,18 +12,19 @@ import Button from "@/components/Button";
 import {useWorkoutDatabase} from "@/database/UseWorkoutDatabase";
 import {useWorkoutExerciseDatabase} from "@/database/workoutExerciseDatabase";
 import {useRouter} from "expo-router";
+import { BodyPart } from "@/types/BodyPart";
 
 export default function NewWorkout() {
     const db = useSQLiteContext();
-    const {getDistinctBodyPart, getExerciseByBodyPart} =
+    const {getBodyPart, getExerciseByBodyPart} =
         useExerciseDatabase(db);
     const {addWorkout} = useWorkoutDatabase(db);
     const {createWorkoutExercise} = useWorkoutExerciseDatabase(db);
 
     const [name, setName] = useState("");
     const [weekday, setWeekday] = useState("");
-    const [bodyParts, setBodyParts] = useState<string[]>([]);
-    const [selectedBodyPart, setSelectedBodyPart] = useState<string | null>(null);
+    const [bodyParts, setBodyParts] = useState<BodyPart[]>([]);
+    const [selectedBodyPart, setSelectedBodyPart] = useState<number | null>(null);
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const [selectedExercises, setSelectedExercises] = useState<
         { exercise_id: number; series: string; repetitions: string }[]
@@ -33,14 +34,14 @@ export default function NewWorkout() {
 
     useEffect(() => {
         async function fetchBodyParts() {
-            const parts = await getDistinctBodyPart();
+            const parts = await getBodyPart();
             setBodyParts(parts || []);
         }
 
         fetchBodyParts();
     }, []);
 
-    async function handleBodyPartSelection(bodyPart: string) {
+    async function handleBodyPartSelection(bodyPart: number) {
         setSelectedBodyPart(bodyPart);
         const exercisesList = await getExerciseByBodyPart(bodyPart);
         setExercises(exercisesList || []);
@@ -161,7 +162,7 @@ export default function NewWorkout() {
                 >
                     <Picker.Item label="Escolha uma parte do corpo" value=""/>
                     {bodyParts.map((part) => (
-                        <Picker.Item key={part} label={part} value={part}/>
+                        <Picker.Item key={part.body_part_id} label={part.name} value={part.body_part_id}/>
                     ))}
                 </Picker>
             </View>
