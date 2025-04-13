@@ -114,7 +114,7 @@ export default function NewWorkout() {
             );
 
             Alert.alert("Sucesso", "Treino criado com sucesso!");
-            router.navigate("/(drawer)/(tabs)");
+            router.navigate("/(tabs)/workouts");
         } catch (error) {
             console.error("Erro ao criar treino:", error);
             Alert.alert(
