@@ -6,7 +6,13 @@ import {useTheme} from "@/components/ThemeProvider";
 export default function Layout() {
     const {resolvedTheme} = useTheme();
     return (
-        <Stack screenOptions={{...createHeaderOptions(resolvedTheme)}}>
+        <Stack screenOptions={{
+            ...createHeaderOptions(resolvedTheme),
+            headerTitleStyle: {
+                ...createHeaderOptions(resolvedTheme).headerTitleStyle,
+                fontWeight: "bold"
+            }
+        }}>
             <Stack.Screen
                 options={{
                     title: "Configurações",
