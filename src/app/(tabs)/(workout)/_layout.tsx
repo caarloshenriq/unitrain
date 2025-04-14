@@ -1,17 +1,26 @@
-import {createHeaderOptions} from "@/constants/headerOptions";
+import { createHeaderOptions } from "@/constants/headerOptions";
 import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Stack } from "expo-router";
-import {useTheme} from "@/components/ThemeProvider";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function Layout() {
-    const {resolvedTheme} = useTheme();
+    const { resolvedTheme } = useTheme();
+    const { headerTintColor } = createHeaderOptions(resolvedTheme);
     return (
         <Stack screenOptions={{
-            ...createHeaderOptions(resolvedTheme),
+            headerLeft: () => (
+                <DrawerToggleButton tintColor={headerTintColor} />
+            ),
+            headerStyle: {
+                backgroundColor: resolvedTheme === "dark" ? "#1e1e1e" : "#f9f9f9"
+            },
+            headerTintColor: resolvedTheme === "dark" ? "#ffffff" : "#000000",
             headerTitleStyle: {
-                ...createHeaderOptions(resolvedTheme).headerTitleStyle,
-                fontWeight: "bold"
-            }
+                fontSize: 20,
+                fontWeight: "bold",
+            },
+            headerTitleAlign: "center",
+            headerShadowVisible: false,
         }}>
             <Stack.Screen
                 options={{

@@ -23,35 +23,68 @@ function InnerLayout() {
             <SQLiteProvider databaseName="unitrain.db" onInit={InitilizeDatabase}>
                 <Drawer screenOptions={{
                     headerStyle: {
-                        backgroundColor: "#000000",
+                        backgroundColor: "#1e1e1e",
                     },
                     headerTintColor: "#FFFFFF",
                     headerTitleStyle: {
                         fontSize: 20,
                         fontWeight: "bold",
+                        alignSelf: "center",
+                        textAlign: "center",
+                        letterSpacing: 0.5,
                     },
                     headerTitleAlign: "center",
                     drawerType: "front",
                     drawerStyle: {
-                        backgroundColor: "#FFFFFF",
+                        backgroundColor: theme.resolvedTheme === "dark"  ? "#1e1e1e" : "#FFFFFF",
                         width: 240,
                     },
+                    drawerActiveBackgroundColor: "#344153",
+                    drawerActiveTintColor: "#FFFFFF",
+                    drawerInactiveTintColor: theme.resolvedTheme === "dark" ? "#FFFFFF" : "#000000",
+                    drawerLabelStyle: {
+                        fontSize: 15,
+                        // fontWeight: "bold",
+                        letterSpacing: 0.5,
+                    },
+                    headerShadowVisible: false,
+                    
                 }}>
                     <Drawer.Screen
                         name="(tabs)"
-                        options={{title: 'Principal', headerShown: false}}
+                        options={{
+                            title: 'Principal',
+                            headerShown: false,
+                        }}
                     />
                     <Drawer.Screen
                         name="(config)"
-                        options={{title: 'Configurações', headerShown: false}}
+                        options={{
+                            title: 'Configurações',
+                            headerShown: false,
+                        }}
                     />
                     <Drawer.Screen
                         name="statistics"
-                        options={{title: 'Estatísticas', headerShown: true}}
+                        options={{
+                            title: 'Estatísticas',
+                            headerShown: true,
+                        }}
                     />
                     <Drawer.Screen
                         name="(exercise)"
-                        options={{title: 'Exercícios', headerShown: false}}
+                        options={{
+                            title: 'Exercícios',
+                            headerShown: false,
+                        }}
+                    />
+                    <Drawer.Screen
+                        name="(tabs)/(workout)"
+                        options={{
+                            title: 'Treinos',
+                            headerShown: false,
+                            tabBarStyle: { display: 'none' }, // Oculta a TabBar para todas as telas do grupo (workout)
+                        }}
                     />
                 </Drawer>
             </SQLiteProvider>
