@@ -8,30 +8,31 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import { Exercise } from '@/types/Exercise';
 import { useEffect, useState } from "react";
+import { BodyPart } from "@/types/BodyPart";
 
 export default function Exercises() {
   const db = useSQLiteContext();
   const router = useRouter();
-  const { getExercises, getExerciseByBodyPart, getDistinctBodyPart } = useExerciseDatabase(db);
+  const { getExercises, getExerciseByBodyPart, getBodyPart } = useExerciseDatabase(db);
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [bodyParts, setBodyParts] = useState<string[]>([]);
-  const [selectedBodyPart, setSelectedBodyPart] = useState<string>("");
+  const [bodyParts, setBodyParts] = useState<BodyPart[]>([]);
+  const [selectedBodyPart, setSelectedBodyPart] = useState<number>();
 
   useEffect(() => {
     async function fetchInitialData() {
-      const parts = await getDistinctBodyPart();
-      setBodyParts(parts || []);
+      const parts = await getBodyPart();
+      setBodyParts(parts);
       const allExercises = await getExercises();
       setExercises(allExercises || []);
     }
     fetchInitialData();
   }, []);
 
-  const handleFilterChange = async (value: string) => {
+  const handleFilterChange = async (value: number) => {
     setSelectedBodyPart(value);
 
-    if (value === "") {
+    if (value === 0) {
       const all = await getExercises();
       setExercises(all || []);
     } else {
@@ -57,7 +58,7 @@ export default function Exercises() {
         >
           <Picker.Item label="Todos os grupos musculares" value="" />
           {bodyParts.map((part) => (
-            <Picker.Item key={part} label={part} value={part} />
+            <Picker.Item key={part.body_part_id} label={part.name} value={part.body_part_id} />
           ))}
         </Picker>
       </View>
