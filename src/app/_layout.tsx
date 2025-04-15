@@ -78,14 +78,6 @@ function InnerLayout() {
                             headerShown: false,
                         }}
                     />
-                    <Drawer.Screen
-                        name="(tabs)/(workout)"
-                        options={{
-                            title: 'Treinos',
-                            headerShown: false,
-                            tabBarStyle: { display: 'none' }, // Oculta a TabBar para todas as telas do grupo (workout)
-                        }}
-                    />
                 </Drawer>
             </SQLiteProvider>
         </GestureHandlerRootView>
