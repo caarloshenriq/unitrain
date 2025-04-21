@@ -33,7 +33,7 @@ export default function Layout() {
                     title: "Novo Treino",
                     headerShown: true,
                 }}
-                name="newWorkout"
+                name="form"
             />
         </Stack>
     );

@@ -21,7 +21,8 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
   async function getWorkout(workout_id: number) {
     try {
       const result = await db.getFirstAsync<Workout>(
-        `SELECT * FROM workouts WHERE workout_id = ${workout_id};`
+        `SELECT * FROM workouts WHERE workout_id = ?;`,
+        [workout_id]
       );
       return result;
     } catch (error) {
@@ -55,8 +56,10 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
     const { workout_id, name, weekday } = workout;
     try {
       await db.runAsync(
-        `UPDATE workouts SET name = ${name}, weekday = ${weekday} WHERE workout_id = ${workout_id};`
+        `UPDATE workouts SET name = ?, weekday = ? WHERE workout_id = ?;`,
+        [name, weekday, workout_id]
       );
+      
       await getWorkouts();
     } catch (error) {
       console.error("Erro ao atualizar treino:", error);
