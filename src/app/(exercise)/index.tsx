@@ -7,17 +7,19 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import { Exercise } from '@/types/Exercise';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BodyPart } from "@/types/BodyPart";
+import { Swipeable } from "react-native-gesture-handler";
 
 export default function Exercises() {
   const db = useSQLiteContext();
   const router = useRouter();
-  const { getExercises, getExerciseByBodyPart, getBodyPart } = useExerciseDatabase(db);
+  const { getExercises, getExerciseByBodyPart, getBodyPart, deleteExercise } = useExerciseDatabase(db);
 
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyParts, setBodyParts] = useState<BodyPart[]>([]);
   const [selectedBodyPart, setSelectedBodyPart] = useState<number>();
+  const swipeableRef = useRef<Swipeable | null>(null);
 
   useEffect(() => {
     async function fetchInitialData() {
@@ -41,6 +43,29 @@ export default function Exercises() {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    await deleteExercise(id);
+    const updatedList = await getExercises();
+    setExercises(updatedList || []);
+  };
+
+  const renderRightActions = (exercise_id: number) => (
+    <View style={{ flexDirection: "row", height: "100%" }}>
+      <TouchableOpacity
+        onPress={() => router.push(`/form?id=${exercise_id}`)}
+        style={{ backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", width: 60,height: 72, borderRadius: 8 }}
+      >
+        <Ionicons name="create-outline" size={24} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => handleDelete(exercise_id)}
+        style={{ backgroundColor: "#ef4444", justifyContent: "center", alignItems: "center", width: 60,height: 72, borderRadius: 8 }}
+      >
+        <Ionicons name="trash-outline" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View className="bg-white flex-1">
       <View className="flex flex-row justify-end pt-4 px-4">
@@ -56,7 +81,7 @@ export default function Exercises() {
           selectedValue={selectedBodyPart}
           onValueChange={handleFilterChange}
         >
-          <Picker.Item label="Todos os grupos musculares" value="" />
+          <Picker.Item label="Todos os grupos musculares" value={0} />
           {bodyParts.map((part) => (
             <Picker.Item key={part.body_part_id} label={part.name} value={part.body_part_id} />
           ))}
@@ -70,21 +95,32 @@ export default function Exercises() {
           </Text>
         ) : (
           exercises.map((exercise) => (
-            <TouchableOpacity
+            <Swipeable
               key={exercise.exercise_id}
-              className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center"
-              onPress={() => router.push(`/(exercise)/${exercise.exercise_id}`)}
+              ref={(ref) => {
+                if (ref) swipeableRef.current = ref;
+              }}
+              onSwipeableWillOpen={() => {
+                if (swipeableRef.current) swipeableRef.current.close();
+                swipeableRef.current = null;
+              }}
+              renderRightActions={() => renderRightActions(exercise.exercise_id)}
             >
-              <View>
-                <Text className="text-black font-bold text-lg">
-                  {exercise.name}
-                </Text>
-                <Text className="text-gray-500">
-                  Grupo muscular: {exercise.body_part}
-                </Text>
-              </View>
-              <Ionicons name="chevron-forward" size={24} color="gray" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center"
+                onPress={() => router.push(`/(exercise)/${exercise.exercise_id}`)}
+              >
+                <View>
+                  <Text className="text-black font-bold text-lg">
+                    {exercise.name}
+                  </Text>
+                  <Text className="text-gray-500">
+                    Grupo muscular: {exercise.body_part}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={24} color="gray" />
+              </TouchableOpacity>
+            </Swipeable>
           ))
         )}
       </ScrollView>
