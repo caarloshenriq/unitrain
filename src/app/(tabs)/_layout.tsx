@@ -1,8 +1,9 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { DrawerToggleButton } from "@react-navigation/drawer";
 import { Tabs, useSegments } from "expo-router";
 import { createHeaderOptions } from "@/constants/headerOptions";
 import { useTheme } from "@/components/ThemeProvider";
+import AppHeader from "@/components/AppHeader";
+import { getTitleForRoute } from "@/constants/screenNames";
 
 export default function TabsLayout() {
     const { resolvedTheme } = useTheme();
@@ -13,30 +14,31 @@ export default function TabsLayout() {
     return (
         <Tabs
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: resolvedTheme === "dark" ? "lightgray" : "black",
                 tabBarStyle: {
                     backgroundColor: resolvedTheme === "dark" ? "#1e1e1e" : "#f9f9f9",
                     borderTopWidth: 0,
                 },
-                headerLeft: () => (
-                    <DrawerToggleButton tintColor={headerTintColor} />
-                ),
-                headerLeftContainerStyle: {
-                    paddingLeft: 10,
-                },
-                headerStyle: {
-                    backgroundColor: resolvedTheme === "dark" ? "#1e1e1e" : "#f9f9f9",
-                    shadowColor: "transparent",
+                // headerLeft: () => (
+                //     <DrawerToggleButton tintColor={headerTintColor} />
+                // ),
+                // headerLeftContainerStyle: {
+                //     paddingLeft: 10,
+                // },
+                // headerStyle: {
+                //     backgroundColor: resolvedTheme === "dark" ? "#1e1e1e" : "#f9f9f9",
+                //     shadowColor: "transparent",
 
-                },
-                headerTintColor: resolvedTheme === "dark" ? "#ffffff" : "#000000",
-                headerTitleStyle: {
-                    fontSize: 20,
-                    fontWeight: "bold",
-                    alignSelf: "center",
-                    textAlign: "center",
-                },
-                headerTitleAlign: "center",
+                // },
+                // headerTintColor: resolvedTheme === "dark" ? "#ffffff" : "#000000",
+                // headerTitleStyle: {
+                //     fontSize: 20,
+                //     fontWeight: "bold",
+                //     alignSelf: "center",
+                //     textAlign: "center",
+                // },
+                // headerTitleAlign: "center",
             }}
         >
             <Tabs.Screen
@@ -46,13 +48,14 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) => (
                         <Ionicons size={28} name="home" color={color} />
                     ),
+                    headerShown: true,
+                    header: () => <AppHeader title={getTitleForRoute("(tabs)")} />,
                 }}
             />
             <Tabs.Screen
                 name="(workout)"
                 options={{
                     title: "Treinos",
-                    headerShown: false,
                     tabBarStyle: isWorkoutDetail
                         ? { display: "none" }
                         : {
@@ -63,6 +66,7 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) => (
                         <Ionicons size={28} name="clipboard" color={color} />
                     ),
+                    headerShown: false,
                 }}
             />
             <Tabs.Screen
@@ -72,6 +76,8 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) => (
                         <Ionicons size={28} name="help-circle-outline" color={color} />
                     ),
+                    headerShown: true,
+                    header: () => <AppHeader title={getTitleForRoute("help")} />,
                 }}
             />
         </Tabs>

@@ -7,9 +7,9 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ModalSelector from "react-native-modal-selector";
 import { Exercise } from '@/types/Exercise';
-import React, { useEffect, useState } from "react";
-import { useColorScheme } from "react-native"; // Importa o hook para detectar o tema do sistema
-import { useFocusEffect } from "@react-navigation/native"; // Importa o hook para detectar o foco da tela
+import React, { useState } from "react";
+import { useColorScheme } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Exercises() {
   const db = useSQLiteContext();
@@ -19,11 +19,11 @@ export default function Exercises() {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [bodyParts, setBodyParts] = useState<string[]>([]);
   const [selectedBodyPart, setSelectedBodyPart] = useState<string>("");
-  const colorScheme = useColorScheme(); // Detecta o tema atual (light ou dark)
+  const colorScheme = useColorScheme();
 
   useFocusEffect(
     React.useCallback(() => {
-      let isActive = true; // Controle para evitar atualizações após o componente ser desmontado
+      let isActive = true;
 
       async function fetchInitialData() {
         try {
@@ -31,7 +31,7 @@ export default function Exercises() {
           const allExercises = await getExercises();
 
           if (isActive) {
-            setSelectedBodyPart(""); // Reseta o filtro
+            setSelectedBodyPart("");
             setBodyParts(parts || []);
             setExercises(allExercises || []);
           }
@@ -42,11 +42,10 @@ export default function Exercises() {
 
       fetchInitialData();
 
-      // Função de limpeza para evitar atualizações após desmontar
       return () => {
         isActive = false;
       };
-    }, [getDistinctBodyPart, getExercises]) // Apenas funções externas como dependências
+    }, [getDistinctBodyPart, getExercises])
   );
 
   const handleFilterChange = async (value: string) => {
@@ -81,14 +80,15 @@ export default function Exercises() {
             { key: "", label: "Todos os grupos musculares" },
             ...bodyParts.map((part) => ({ key: part, label: part })),
           ]}
-          initValue="Selecione um grupo muscular" // Valor inicial padrão
-          selectedKey={selectedBodyPart} // Vincula o item selecionado ao estado
+          initValue="Selecione um grupo muscular"
+          selectedKey={selectedBodyPart}
           onChange={(option) => handleFilterChange(option.key)}
           selectTextStyle={{ color: colorScheme === "dark" ? "white" : "black", fontSize: 16 }}
           optionContainerStyle={{ backgroundColor: colorScheme === "dark" ? "#1f2937" : "white", borderRadius: 8 }}
           optionTextStyle={{ color: colorScheme === "dark" ? "white" : "black", fontSize: 16 }}
           cancelStyle={{ backgroundColor: colorScheme === "dark" ? "#1f2937" : "white", borderRadius: 8 }}
           cancelTextStyle={{ color: colorScheme === "dark" ? "white" : "black", fontSize: 16 }}
+          cancelText="Cancelar"
         />
       </View>
 

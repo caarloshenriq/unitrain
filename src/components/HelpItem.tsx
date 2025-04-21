@@ -20,9 +20,9 @@ export default function HelpItem({question, answer}: HelpItemProps) {
     };
 
     return (
-        <View className="mb-4 bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+        <View className="mb-4 bg-gray-100 dark:bg-gray-900 p-4 rounded-lg shadow-sm">
             <Pressable onPress={toggleExpand} className="flex-row justify-between items-center">
-                <Text className="text-black dark:text-gray-200 font-bold text-lg flex-1">{question}</Text>
+                <Text className="text-gray-800 dark:text-gray-200 font-bold text-lg flex-1">{question}</Text>
                 <Ionicons
                     name={expanded ? "chevron-up" : "chevron-down"}
                     size={24}
