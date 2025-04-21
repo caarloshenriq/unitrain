@@ -1,23 +1,22 @@
-import {createHeaderOptions} from "@/constants/headerOptions";
-import {DrawerToggleButton} from "@react-navigation/drawer";
-import {Stack} from "expo-router";
-import {useTheme} from "@/components/ThemeProvider";
+import { Stack } from "expo-router";
+import AppHeader from "@/components/AppHeader";
+import { getTitleForRoute } from "@/constants/screenNames";
 
 export default function Layout() {
-    const {resolvedTheme} = useTheme();
     return (
         <Stack screenOptions={{
-            ...createHeaderOptions(resolvedTheme),
-            headerTitleStyle: {
-                ...createHeaderOptions(resolvedTheme).headerTitleStyle,
-                fontWeight: "bold"
-            }
+            headerShown: false,
+            // ...createHeaderOptions(resolvedTheme),
+            // headerTitleStyle: {
+            //     ...createHeaderOptions(resolvedTheme).headerTitleStyle,
+            //     fontWeight: "bold"
+            // }
         }}>
             <Stack.Screen
                 options={{
                     title: "Exercícios",
                     headerShown: true,
-                    headerLeft: () => <DrawerToggleButton/>,
+                    header: () => <AppHeader title={getTitleForRoute("(exercise)")} />,
                 }}
                 name="index"
             />
@@ -25,13 +24,15 @@ export default function Layout() {
                 options={{
                     title: "Detalhe do Exercício",
                     headerShown: true,
+                    header: () => <AppHeader title={getTitleForRoute("(exercise)/[id]")} headerLeftButtonType="back" />,
                 }}
                 name="[id]"
             />
             <Stack.Screen
                 options={{
-                    title: "Novo Exercício",
+                    title: "Formulário Exercício",
                     headerShown: true,
+                    header: () => <AppHeader title={getTitleForRoute("(exercise)/form")} headerLeftButtonType="back" />,
                 }}
                 name="form"
             />
