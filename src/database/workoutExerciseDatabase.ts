@@ -17,6 +17,29 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
     }
   }
 
+  async function updateWorkoutExercise(workoutExercise: WorkoutExercise) {
+    const { workout_id, exercise_id, series, repetition } = workoutExercise;
+    try {
+      await db.runAsync(
+        "UPDATE workout_exercise SET series = ?, repetition = ? WHERE workout_id = ? AND exercise_id = ?;",
+        [series, repetition, workout_id, exercise_id]
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar exercício do treino:", error);
+    }
+  }
+
+  async function deleteWorkoutExercise(workout_id: number, exercise_id: number) {
+    try {
+      await db.runAsync(
+        "DELETE FROM workout_exercise WHERE workout_id = ? AND exercise_id = ?;",
+        [workout_id, exercise_id]
+      );
+    } catch (error) {
+      console.error("Erro ao remover exercício do treino:", error);
+    }
+  }
+
   async function getWorkoutDetail(workoutId: number) {
     try {
       const result = await db.getAllAsync<{
@@ -27,12 +50,22 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
         series: number;
         exercise_id: number;
       }>(
-        "select e.name, e.exercise_id,b.name as body_part, we.repetition, e.description, we.series from workout_exercise we inner join exercise e on e.exercise_id = we.exercise_id  inner join body_part b on e.body_part_id = b.body_part_id where we.workout_id = ?;",
+        `SELECT 
+          e.name, 
+          e.exercise_id, 
+          b.name AS body_part, 
+          we.repetition, 
+          e.description, 
+          we.series 
+        FROM workout_exercise we 
+        INNER JOIN exercise e ON e.exercise_id = we.exercise_id  
+        INNER JOIN body_part b ON e.body_part_id = b.body_part_id 
+        WHERE we.workout_id = ?;`,
         [workoutId]
       );
       return result;
     } catch (error) {
-      console.log("Erro ao buscar detalhes do treino:", error);
+      console.error("Erro ao buscar detalhes do treino:", error);
       return [];
     }
   }
@@ -40,6 +73,8 @@ export function useWorkoutExerciseDatabase(db: SQLiteDatabase) {
   return {
     workoutExercise,
     createWorkoutExercise,
+    updateWorkoutExercise,
+    deleteWorkoutExercise,
     getWorkoutDetail,
   };
 }

@@ -48,7 +48,7 @@ export default function Layout() {
                     headerShown: true,
                     header: () => <AppHeader title={getTitleForRoute("(workout)/newWorkout")} headerLeftButtonType="back" />,
                 }}
-                name="newWorkout"
+                name="form"
             />
         </Stack>
     );
