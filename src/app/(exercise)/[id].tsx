@@ -52,20 +52,20 @@ export default function WorkoutDetails() {
   }
 
   return (
-    <ScrollView className="bg-white p-4 flex-1">
+    <ScrollView className="bg-white dark:bg-gray-700 p-4 flex-1">
       <View className="mb-6 mt-4">
-        <Text className="text-black text-3xl font-bold text-center mb-2">
+        <Text className="text-black dark:text-white text-3xl font-bold text-center mb-2">
           {exercise?.name}
         </Text>
-        <Text className="text-gray-600 text-lg text-center">
+        <Text className="text-gray-600 dark:text-gray-200 text-lg text-center">
           Grupo Muscular:{" "}
-          <Text className="font-medium text-black">{exercise?.body_part}</Text>
+          <Text className="font-medium text-black dark:text-white">{exercise?.body_part}</Text>
         </Text>
       </View>
 
-      <View className="border border-gray-300 rounded-lg p-4 bg-gray-50 shadow-sm mb-6">
-        <Text className="text-black font-semibold text-lg mb-2">Descrição</Text>
-        <Text className="text-gray-700 leading-relaxed">
+      <View className="border border-gray-300 dark:border-gray-50 rounded-lg p-4 bg-gray-50 dark:bg-gray-500 shadow-sm mb-6">
+        <Text className="text-black dark:text-white font-semibold text-lg mb-2">Descrição</Text>
+        <Text className="text-gray-700 dark:text-gray-100 leading-relaxed">
           {exercise?.description}
         </Text>
       </View>

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useColorScheme } from "nativewind";
 
 export type ThemeType = 'light' | 'dark';
 
@@ -44,6 +45,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 };
 
 const ThemeWrapper: React.FC<ThemeWrapperProps> = ({ children, theme }) => {
+    const { setColorScheme } = useColorScheme();
+    
+    useEffect(() => {
+        setColorScheme(theme);
+    }, [theme]);
+
     return (
         <View className={theme === 'dark' ? 'dark flex-1' : 'flex-1'}>
             {children}

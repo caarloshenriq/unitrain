@@ -5,7 +5,7 @@ import Button from "@/components/Button";
 
 export default function Help() {
     return (
-        <ScrollView contentContainerStyle={{padding: 16, flexGrow: 1}}>
+        <ScrollView className="d-flex p-4 flex-1 bg-white dark:bg-gray-700 dark:text-gray-100" contentContainerStyle={{padding: 16, flexGrow: 1}}>
             <HelpItem
                 question="Como criar um treino?"
                 answer="Vá até a aba 'Treinos', clique em '+ Novo treino', escolha o dia da semana e adicione os exercícios desejados."
