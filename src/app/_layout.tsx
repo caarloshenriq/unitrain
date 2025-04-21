@@ -84,6 +84,12 @@ function InnerLayout() {
                             headerShown: false,
                         }}
                     />
+                    <Drawer.Screen
+                        name="(workout)/[id]"
+                        options={{
+                            drawerItemStyle: { display: "none" },
+                        }}
+                    />
                 </Drawer>
             </SQLiteProvider>
         </GestureHandlerRootView>
