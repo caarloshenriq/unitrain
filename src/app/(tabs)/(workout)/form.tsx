@@ -155,7 +155,7 @@ export default function FormWorkout() {
       );
 
       Alert.alert("Sucesso", id ? "Treino atualizado!" : "Treino criado!");
-      router.push("/(tabs)/workouts");
+      router.push("/(tabs)/(workout)");
     } catch (err) {
       console.error(err);
       Alert.alert("Erro", "Falha ao salvar o treino.");
@@ -163,7 +163,7 @@ export default function FormWorkout() {
   }
 
   return (
-    <SafeAreaView className="bg-white p-4 flex-1">
+    <SafeAreaView className="p-4 flex-1">
       <Input
         label="Nome do Treino"
         type="text"
