@@ -2,21 +2,25 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useExerciseDatabase } from "@/database/UseExerciseDatabase";
 import { Exercise } from "@/types/Exercise";
+import { BodyPart } from "@/types/BodyPart";
 import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import { TextInput } from "react-native-gesture-handler";
 import { useTheme } from "@/components/ThemeProvider";
+import { Picker } from "@react-native-picker/picker";
 
 export default function ExerciseForm() {
-  const { id } = useLocalSearchParams(); // pega o ID se existir
+  const { id } = useLocalSearchParams();
   const isEdit = !!id;
   const db = useSQLiteContext();
   const router = useRouter();
-  const { getExercise, addExercise, updateExercise } = useExerciseDatabase(db);
+  const { getExercise, addExercise, updateExercise, getBodyPart } =
+    useExerciseDatabase(db);
   const theme = useTheme();
 
+  const [bodyParts, setBodyParts] = useState<BodyPart[]>([]);
   const [exercise, setExercise] = useState<Exercise>({
     exercise_id: 0,
     name: "",
@@ -26,21 +30,45 @@ export default function ExerciseForm() {
   });
 
   useEffect(() => {
-    if (isEdit) {
-      (async () => {
+    async function loadData() {
+      const parts = await getBodyPart();
+      setBodyParts(parts || []);
+
+      if (isEdit) {
         const existing = await getExercise(Number(id));
-        if (existing) setExercise(existing);
-      })();
+        if (existing) {
+          const matchedPart = parts.find((p) => p.name === existing.body_part);
+          setExercise({
+            ...existing,
+            body_part: matchedPart?.body_part_id.toString() || "",
+          });
+        }
+      }
     }
+
+    loadData();
   }, [id]);
 
   async function handleSubmit() {
+    const payload: Exercise = {
+      ...exercise,
+      body_part: exercise.body_part,
+    };
+
     if (isEdit) {
-      await updateExercise(exercise);
+      await updateExercise(payload);
     } else {
-      await addExercise(exercise);
+      await addExercise(payload);
     }
-    router.push("/(exercise)/index");
+
+    Alert.alert(
+      "Sucesso",
+      isEdit
+        ? "Exercício atualizado com sucesso!"
+        : "Exercício criado com sucesso!"
+    );
+
+    router.push("/(exercise)/");
   }
 
   return (
@@ -57,22 +85,35 @@ export default function ExerciseForm() {
         placeholder="Ex: Rosca Direta"
       />
 
-      <Input
-        label="Grupo Muscular"
-        type="text"
-        value={exercise.body_part}
-        onChangeText={(val) => setExercise({ ...exercise, body_part: val })}
-        placeholder="Ex: Bíceps"
-      />
+      <Text className="text-black dark:text-white font-semibold mt-4 mb-1">
+        Grupo Muscular
+      </Text>
+      <View className="border border-gray-300 rounded-md bg-white dark:bg-gray-600">
+        <Picker
+          selectedValue={exercise.body_part}
+          onValueChange={(val) => setExercise({ ...exercise, body_part: val })}
+        >
+          <Picker.Item label="Selecione um grupo muscular" value="" />
+          {bodyParts.map((bp) => (
+            <Picker.Item
+              key={bp.body_part_id}
+              label={bp.name}
+              value={bp.body_part_id.toString()}
+            />
+          ))}
+        </Picker>
+      </View>
 
-      <Text className="text-black dark:text-white font-semibold mb-1">Descrição</Text>
+      <Text className="text-black dark:text-white font-semibold mt-4 mb-1">
+        Descrição
+      </Text>
       <TextInput
         multiline
         numberOfLines={4}
         value={exercise.description}
         onChangeText={(val) => setExercise({ ...exercise, description: val })}
         placeholder="Descreva a execução"
-        className="border border-gray-300 rounded-md p-2 text-black dark:text-white"
+        className="border border-gray-300 rounded-md p-2 text-black dark:text-white bg-white dark:bg-gray-600"
         placeholderTextColor={theme.resolvedTheme === "dark" ? "#ccc" : "#999"}
         textAlignVertical="top"
       />
