@@ -58,7 +58,7 @@ export async function populateExerciseTable(db: SQLiteDatabase) {
     if (hasBodyPart) {
       console.log("Migrando tabela exercise...");
 
-      await db.execAsync(`ALTER TABLE exercise RENAME TO exercise_old;`);
+      await db.execAsync(`DROP TABLE exercise;`);
 
       await db.execAsync(`
           CREATE TABLE IF NOT EXISTS exercise (
@@ -72,7 +72,6 @@ export async function populateExerciseTable(db: SQLiteDatabase) {
           );
         `);
 
-      await db.execAsync(`DROP TABLE exercise_old;`);
 
       console.log("Migração concluída com sucesso.");
     }
