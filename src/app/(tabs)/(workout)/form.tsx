@@ -1,23 +1,13 @@
 import Input from "@/components/Input";
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useLayoutEffect, useState } from "react";
-import {
-  Alert,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useExerciseDatabase } from "@/database/UseExerciseDatabase";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
 import { useWorkoutExerciseDatabase } from "@/database/workoutExerciseDatabase";
-import {
-  useRouter,
-  useLocalSearchParams,
-  useNavigation,
-} from "expo-router";
+import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 import { Exercise } from "@/types/Exercise";
 import { BodyPart } from "@/types/BodyPart";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -32,11 +22,8 @@ export default function FormWorkout() {
 
   const { getBodyPart, getExerciseByBodyPart } = useExerciseDatabase(db);
   const { addWorkout, getWorkout, updateWorkout } = useWorkoutDatabase(db);
-  const {
-    createWorkoutExercise,
-    getWorkoutDetail,
-    deleteWorkoutExercise,
-  } = useWorkoutExerciseDatabase(db);
+  const { createWorkoutExercise, getWorkoutDetail, deleteWorkoutExercise } =
+    useWorkoutExerciseDatabase(db);
 
   const [name, setName] = useState("");
   const [weekday, setWeekday] = useState("");
@@ -201,55 +188,74 @@ export default function FormWorkout() {
           ))}
         </Picker>
       </View>
-
       {selectedBodyPart && (
         <>
-          <Text className="mt-4 text-black">Selecione os Exercícios</Text>
-          <ScrollView className="border border-gray-300 rounded-md mt-2 max-h-64">
-            {exercises.map((exercise) => (
-              <TouchableOpacity
-                key={exercise.exercise_id}
-                className="flex-row items-center justify-between p-2 border-b border-gray-300"
-                onPress={() => toggleExerciseSelection(exercise.exercise_id)}
-              >
-                <Text className="text-black">{exercise.name}</Text>
-                {selectedExercises.some(
-                  (e) => e.exercise_id === exercise.exercise_id
-                ) ? (
-                  <Ionicons name="checkbox" size={24} color="black" />
-                ) : (
-                  <Ionicons name="square-outline" size={24} color="gray" />
-                )}
-              </TouchableOpacity>
-            ))}
+          <Text className="mt-6 text-black text-xl font-semibold">
+            Selecione os Exercícios
+          </Text>
+
+          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 bg-gray-50">
+            {exercises.map((exercise) => {
+              const isSelected = selectedExercises.some(
+                (e) => e.exercise_id === exercise.exercise_id
+              );
+
+              return (
+                <TouchableOpacity
+                  key={exercise.exercise_id}
+                  className={`p-3 border-b border-gray-300 ${
+                    isSelected ? "bg-gray-100" : ""
+                  }`}
+                  onPress={() => toggleExerciseSelection(exercise.exercise_id)}
+                >
+                  <View className="flex-row items-center">
+                    <Ionicons
+                      name={isSelected ? "checkbox" : "square-outline"}
+                      size={20}
+                      color={isSelected ? "black" : "gray"}
+                      style={{ marginRight: 10 }}
+                    />
+                    <Text className="text-black text-base">
+                      {exercise.name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </ScrollView>
         </>
       )}
 
       {selectedExercises.length > 0 && (
         <>
-          <Text className="mt-4 text-black">Séries e Repetições</Text>
-          <ScrollView className="border border-gray-300 rounded-md mt-2 max-h-64 p-2">
+          <Text className="mt-6 text-black text-xl font-semibold">
+            Séries e Repetições
+          </Text>
+
+          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 p-3 bg-gray-50">
             {selectedExercises.map((exercise) => (
               <View
                 key={exercise.exercise_id}
                 className="mb-4 border-b border-gray-300 pb-4"
               >
-                <View className="flex-row justify-between items-center">
-                  <Text className="text-black font-bold">{exercise.name}</Text>
+                <View className="flex-row justify-between items-center mb-2">
+                  <Text className="text-black font-bold text-base">
+                    {exercise.name}
+                  </Text>
                   <TouchableOpacity
                     onPress={() => removeExercise(exercise.exercise_id)}
                   >
-                    <Ionicons name="close-circle" size={24} color="red" />
+                    <Ionicons name="close-circle" size={22} color="red" />
                   </TouchableOpacity>
                 </View>
 
-                <View className="flex-row justify-between mt-2">
-                  <View className="w-1/2 pr-2">
-                    <Text className="text-black">Séries</Text>
+                <View className="flex-row justify-between">
+                  <View className="w-[48%]">
+                    <Text className="text-gray-700 mb-1">Séries</Text>
                     <TextInput
-                      className="border border-gray-400 p-2 rounded-md text-black"
+                      className="border border-gray-300 bg-white p-2 rounded-md text-black"
                       keyboardType="numeric"
+                      placeholder="Ex: 4"
                       value={exercise.series}
                       onChangeText={(val) =>
                         updateExerciseDetails(
@@ -260,11 +266,13 @@ export default function FormWorkout() {
                       }
                     />
                   </View>
-                  <View className="w-1/2 pl-2">
-                    <Text className="text-black">Repetições</Text>
+
+                  <View className="w-[48%]">
+                    <Text className="text-gray-700 mb-1">Repetições</Text>
                     <TextInput
-                      className="border border-gray-400 p-2 rounded-md text-black"
+                      className="border border-gray-300 bg-white p-2 rounded-md text-black"
                       keyboardType="numeric"
+                      placeholder="Ex: 12"
                       value={exercise.repetitions}
                       onChangeText={(val) =>
                         updateExerciseDetails(
