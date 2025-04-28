@@ -1,4 +1,4 @@
-import { Workout } from "@/types/Workout";
+import { FormattedWorkout, ProgressResult, Workout } from "@/types/Workout";
 import { SQLiteDatabase } from "expo-sqlite";
 import { useState } from "react";
 
@@ -34,11 +34,10 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
   async function addWorkout(workout: Omit<Workout, "workout_id">) {
     const { name, weekday } = workout;
     try {
-      await db.runAsync("INSERT INTO workouts (name, weekday, active) VALUES (?, ?, ?);", [
-        name,
-        weekday,
-        true
-      ]);
+      await db.runAsync(
+        "INSERT INTO workouts (name, weekday, active) VALUES (?, ?, ?);",
+        [name, weekday, true]
+      );
 
       const result = await db.getFirstAsync<{ workout_id: number }>(
         "SELECT last_insert_rowid() as workout_id;"
@@ -59,7 +58,7 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
         `UPDATE workouts SET name = ?, weekday = ? WHERE workout_id = ?;`,
         [name, weekday, workout_id]
       );
-      
+
       await getWorkouts();
     } catch (error) {
       console.error("Erro ao atualizar treino:", error);
@@ -77,6 +76,46 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
     }
   }
 
+  async function getWorkoutsProgress() {
+    try {
+      const results = await db.getAllAsync<{
+        workout_name: string;
+        date: string;
+        average_weight: number;
+      }>(
+        `
+        SELECT w.name as workout_name, wi.date as date, AVG(wp.weight) as average_weight
+        FROM workouts_info wi
+        JOIN workout_progress wp ON wp.workout_info_id = wi.workouts_info_id
+        JOIN workouts w ON w.workout_id = wi.workout_id AND w.active = 1
+        GROUP BY w.name, wi.date
+        ORDER BY wi.date ASC;
+        `
+      );
+
+      const grouped = results.reduce((acc, curr) => {
+        const workout = acc.find((w) => w.workout_name === curr.workout_name);
+        if (workout) {
+          workout.data.push({
+            date: curr.date,
+            average_weight: curr.average_weight,
+          });
+        } else {
+          acc.push({
+            workout_name: curr.workout_name,
+            data: [{ date: curr.date, average_weight: curr.average_weight }],
+          });
+        }
+        return acc;
+      }, [] as { workout_name: string; data: { date: string; average_weight: number }[] }[]);
+
+      return grouped;
+    } catch (error) {
+      console.error("Erro ao buscar progresso dos treinos:", error);
+      return [];
+    }
+  }
+
   return {
     workouts,
     getWorkouts,
@@ -84,5 +123,6 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
     addWorkout,
     updateWorkout,
     deleteWorkout,
+    getWorkoutsProgress,
   };
 }
