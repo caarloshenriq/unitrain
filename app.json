@@ -2,7 +2,7 @@
   "expo": {
     "name": "unitrain",
     "slug": "unitrain",
-    "version": "1.0.0",
+    "version": "0.0.1-beta",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0A1D37"
     },
     "ios": {
       "supportsTablet": true
@@ -19,9 +19,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0A1D37"
       },
-      "package": "com.anonymous.unitrain"
+      "package": "com.felipenegrelle.unitrain"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +33,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fb4e09a0-0ca0-4e91-86eb-4a1fcfd7d8dc"
+      }
     }
   }
 }
