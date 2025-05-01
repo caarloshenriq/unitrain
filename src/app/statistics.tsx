@@ -17,7 +17,11 @@ export default function Statistics() {
   useEffect(() => {
     async function fetchData() {
       const workouts = await getWorkoutsProgress();
-      setProgressData(workouts);
+      const processed = workouts.map((workout) => ({
+        workout_name: workout.workout_name,
+        data: [...workout.data],
+      }));
+      setProgressData(processed);
     }
     fetchData();
   }, []);
@@ -27,57 +31,62 @@ export default function Statistics() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>Estatísticas de Carga</Text>
 
-        {progressData.map((workout, index) => (
-          <View key={index} style={styles.chartContainer}>
-            <Text style={styles.workoutName}>{workout.workout_name}</Text>
+        {progressData.map((workout, index) => {
+          const chartData =
+            workout.data.length >= 2
+              ? workout.data.map((d) => ({
+                  day: new Date(d.date).getTime(),
+                  weight: d.average_weight,
+                }))
+              : workout.data.length === 1
+              ? [
+                  {
+                    day: new Date(workout.data[0].date).getTime(),
+                    weight: workout.data[0].average_weight,
+                  },
+                  {
+                    day:
+                      new Date(workout.data[0].date).getTime() + 1000 * 60 * 60,
+                    weight: workout.data[0].average_weight,
+                  },
+                ]
+              : [];
 
-            <View style={{ width: "100%", height: 300 }}>
-              <CartesianChart
-                data={
-                  workout.data.length >= 2
-                    ? workout.data.map((d) => ({
-                        day: new Date(d.date).getTime(),
-                        weight: d.average_weight,
-                      }))
-                    : workout.data.length === 1
-                    ? [
-                        {
-                          day: new Date(workout.data[0].date).getTime(),
-                          weight: workout.data[0].average_weight,
-                        },
-                        {
-                          day:
-                            new Date(workout.data[0].date).getTime() +
-                            1000 * 60 * 60,
-                          weight: workout.data[0].average_weight,
-                        }, // +1h
-                      ]
-                    : []
-                }
-                xKey="day"
-                yKeys={["weight"]}
-                axisOptions={{
-                  tickCount: 5,
-                  labelPosition: "inset",
-                  formatYLabel: (value) => `${value}kg`,
-                  formatXLabel: (value) => format(new Date(value), "dd/MM"),
-                }}
-              >
-                {({ points }) =>
-                  points.weight.length > 0 ? (
-                    <Line
-                      points={points.weight}
-                      color="black"
-                      strokeWidth={4}
-                    />
-                  ) : (
-                    <></>
-                  )
-                }
-              </CartesianChart>
+          return (
+            <View
+              key={`${workout.workout_name}-${chartData.length}`}
+              style={styles.chartContainer}
+            >
+              <Text style={styles.workoutName}>{workout.workout_name}</Text>
+
+              <View style={{ width: "100%", height: 300 }}>
+                {chartData.length > 0 ? (
+                  <CartesianChart
+                    data={chartData}
+                    xKey="day"
+                    yKeys={["weight"]}
+                    axisOptions={{
+                      tickCount: 5,
+                      labelPosition: "inset",
+                      formatYLabel: (value) => `${value}kg`,
+                      formatXLabel: (value) => format(new Date(value), "dd/MM"),
+                    }}
+                  >
+                    {({ points }) => (
+                      <Line
+                        points={points.weight}
+                        color="black"
+                        strokeWidth={4}
+                      />
+                    )}
+                  </CartesianChart>
+                ) : (
+                  <Text style={styles.noData}>Sem dados suficientes</Text>
+                )}
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
     </SafeAreaView>
   );
@@ -106,16 +115,10 @@ const styles = StyleSheet.create({
     color: "black",
     marginBottom: 8,
   },
-  latestWeight: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "black",
-  },
-  latestDate: {
-    fontSize: 16,
+  noData: {
     textAlign: "center",
     color: "gray",
-    marginBottom: 8,
+    fontStyle: "italic",
+    marginTop: 20,
   },
 });
