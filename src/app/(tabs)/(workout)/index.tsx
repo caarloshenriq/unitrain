@@ -23,14 +23,10 @@ export default function Tab() {
   const { getWorkouts, deleteWorkout } = useWorkoutDatabase(db);
 
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-<<<<<<< HEAD
-  const [refreshing, setRefreshing] = useState(false); // Estado para controlar o refresh
   const theme = useTheme();
-=======
   const [refreshing, setRefreshing] = useState(false);
   const [openItem, setOpenItem] = useState<number | null>(null);
   const swipeableRefs = useRef<{ [key: number]: Swipeable | null }>({});
->>>>>>> a2fe641a (finalizando crud treino e exercicio)
 
   const fetchWorkouts = async () => {
     const data = await getWorkouts();
@@ -103,21 +99,6 @@ export default function Tab() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-<<<<<<< HEAD
-      >
-        {workouts.length === 0 ? (
-          <Text className="text-gray-500 text-center mt-10">Nenhum treino cadastrado.</Text>
-        ) : (
-          workouts.map((workout) => (
-            <TouchableOpacity
-              key={workout.workout_id}
-              className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center"
-              onPress={() => router.push(`/(workout)/${workout.workout_id}`)}
-            >
-              <View>
-                <Text className="text-black dark:text-white font-bold text-lg">{workout.name}</Text>
-                <Text className="text-gray-500 dark:text-gray-400">Dia: {getWeekdayName(workout.weekday)}</Text>
-=======
         renderItem={({ item }) => (
           <Swipeable
             ref={(ref) => (swipeableRefs.current[item.workout_id] = ref)}
@@ -128,7 +109,6 @@ export default function Tab() {
               <View>
                 <Text className="text-black font-bold text-lg">{item.name}</Text>
                 <Text className="text-gray-500">Dia: {getWeekdayName(item.weekday)}</Text>
->>>>>>> a2fe641a (finalizando crud treino e exercicio)
               </View>
               <Ionicons name="chevron-forward" size={24} color={theme.resolvedTheme === "dark" ? "white" : "gray"} />
             </TouchableOpacity>
