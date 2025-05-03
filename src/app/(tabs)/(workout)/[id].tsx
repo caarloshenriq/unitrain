@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useWorkoutExerciseDatabase } from "@/database/workoutExerciseDatabase";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
@@ -20,6 +20,7 @@ import Button from "@/components/Button";
 export default function WorkoutExecution() {
   const { id } = useLocalSearchParams();
   const db = useSQLiteContext();
+  const router = useRouter();
   const { getWorkout } = useWorkoutDatabase(db);
   const { getWorkoutDetail } = useWorkoutExerciseDatabase(db);
   const { createWorkoutInfo } = useWorkoutInfoDatabase(db);
@@ -134,6 +135,7 @@ export default function WorkoutExecution() {
         }
 
         Alert.alert("Treino finalizado", `Duração: ${elapsed}`);
+        router.push("/(tabs)/(workout)");
       } catch (error) {
         console.error("Erro ao salvar o treino:", error);
         Alert.alert("Erro", "Não foi possível salvar os dados do treino.");
