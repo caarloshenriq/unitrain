@@ -5,10 +5,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { CartesianChart, Line } from "victory-native";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
 import { format } from "date-fns";
+import { useFont } from "@shopify/react-native-skia";
 
 export default function Statistics() {
   const db = useSQLiteContext();
   const { getWorkoutsProgress } = useWorkoutDatabase(db);
+  const font = useFont(require("@/fonts/Roboto-Regular.ttf"));
 
   const [progressData, setProgressData] = useState<
     { workout_name: string; data: { date: string; average_weight: number }[] }[]
@@ -25,6 +27,10 @@ export default function Statistics() {
     }
     fetchData();
   }, [progressData]);
+
+  if (!font) {
+    return <Text style={{ textAlign: "center", marginTop: 50 }}>Carregando fonte...</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -54,7 +60,7 @@ export default function Statistics() {
 
           return (
             <View
-              key={`${workout.workout_name}-${chartData.length}`}
+              key={`${workout.workout_name}-${index}`}
               style={styles.chartContainer}
             >
               <Text style={styles.workoutName}>{workout.workout_name}</Text>
@@ -67,18 +73,23 @@ export default function Statistics() {
                     yKeys={["weight"]}
                     axisOptions={{
                       tickCount: 5,
+                      font: font,
+                      labelOffset: { x: 3, y: 5 },
                       labelPosition: "inset",
-                      formatYLabel: (value) => `${value}kg`,
-                      formatXLabel: (value) => format(new Date(value), "dd/MM"),
+                      formatYLabel: (value) => `${value} kg`,
+                      formatXLabel: (value) =>
+                        format(new Date(value), "dd/MM"),
                     }}
                   >
-                    {({ points }) => (
-                      <Line
-                        points={points.weight}
-                        color="black"
-                        strokeWidth={4}
-                      />
-                    )}
+                    {({ points }) =>
+                      points.weight?.length > 0 ? (
+                        <Line
+                          points={points.weight}
+                          color="black"
+                          strokeWidth={4}
+                        />
+                      ) : null
+                    }
                   </CartesianChart>
                 ) : (
                   <Text style={styles.noData}>Sem dados suficientes</Text>
