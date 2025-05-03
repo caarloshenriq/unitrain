@@ -24,7 +24,7 @@ export default function Statistics() {
       setProgressData(processed);
     }
     fetchData();
-  }, []);
+  }, [progressData]);
 
   return (
     <SafeAreaView style={styles.container}>
