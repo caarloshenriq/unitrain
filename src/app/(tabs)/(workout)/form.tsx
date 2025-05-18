@@ -150,7 +150,7 @@ export default function FormWorkout() {
   }
 
   return (
-    <SafeAreaView className="p-4 flex-1">
+    <SafeAreaView className="p-4 flex-1 dark:bg-gray-700 bg-white">
       <Input
         label="Nome do Treino"
         type="text"
@@ -158,9 +158,9 @@ export default function FormWorkout() {
         onChangeText={setName}
       />
 
-      <Text className="mt-4 text-black">Dia da semana</Text>
+      <Text className="mt-4 text-black dark:text-white">Dia da semana</Text>
       <View className="border border-gray-300 rounded-md mt-2">
-        <Picker selectedValue={weekday} onValueChange={setWeekday}>
+        <Picker selectedValue={weekday} onValueChange={setWeekday} className="dark:text-white text-black">
           <Picker.Item label="Selecione o dia da semana" value="" />
           <Picker.Item label="Domingo" value="1" />
           <Picker.Item label="Segunda-feira" value="2" />
@@ -172,7 +172,7 @@ export default function FormWorkout() {
         </Picker>
       </View>
 
-      <Text className="mt-4 text-black">Parte do corpo</Text>
+      <Text className="mt-4 text-black dark:text-white">Parte do corpo</Text>
       <View className="border border-gray-300 rounded-md mt-2">
         <Picker
           selectedValue={selectedBodyPart}
@@ -190,11 +190,11 @@ export default function FormWorkout() {
       </View>
       {selectedBodyPart && (
         <>
-          <Text className="mt-6 text-black text-xl font-semibold">
+          <Text className="mt-6 text-black text-xl font-semibold dark:text-white">
             Selecione os Exercícios
           </Text>
 
-          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 bg-gray-50">
+          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 bg-gray-50 dark:bg-gray-800 dark:border-gray-200">
             {exercises.map((exercise) => {
               const isSelected = selectedExercises.some(
                 (e) => e.exercise_id === exercise.exercise_id
@@ -215,7 +215,7 @@ export default function FormWorkout() {
                       color={isSelected ? "black" : "gray"}
                       style={{ marginRight: 10 }}
                     />
-                    <Text className="text-black text-base">
+                    <Text className="text-black text-base dark:text-white">
                       {exercise.name}
                     </Text>
                   </View>
@@ -228,18 +228,18 @@ export default function FormWorkout() {
 
       {selectedExercises.length > 0 && (
         <>
-          <Text className="mt-6 text-black text-xl font-semibold">
+          <Text className="mt-6 text-black text-xl font-semibold dark:text-white">
             Séries e Repetições
           </Text>
 
-          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 p-3 bg-gray-50">
+          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 p-3 dark:bg-gray-800 dark:border-gray-200">
             {selectedExercises.map((exercise) => (
               <View
                 key={exercise.exercise_id}
                 className="mb-4 border-b border-gray-300 pb-4"
               >
                 <View className="flex-row justify-between items-center mb-2">
-                  <Text className="text-black font-bold text-base">
+                  <Text className="text-black font-bold text-base dark:text-white">
                     {exercise.name}
                   </Text>
                   <TouchableOpacity
@@ -251,7 +251,7 @@ export default function FormWorkout() {
 
                 <View className="flex-row justify-between">
                   <View className="w-[48%]">
-                    <Text className="text-gray-700 mb-1">Séries</Text>
+                    <Text className="text-gray-700 mb-1 dark:text-gray-200">Séries</Text>
                     <TextInput
                       className="border border-gray-300 bg-white p-2 rounded-md text-black"
                       keyboardType="numeric"
@@ -268,7 +268,7 @@ export default function FormWorkout() {
                   </View>
 
                   <View className="w-[48%]">
-                    <Text className="text-gray-700 mb-1">Repetições</Text>
+                    <Text className="text-gray-700 mb-1 dark:text-gray-200">Repetições</Text>
                     <TextInput
                       className="border border-gray-300 bg-white p-2 rounded-md text-black"
                       keyboardType="numeric"

@@ -43,7 +43,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "tailwindcss": "^3.4.17",
-    "victory-native": "^41.17.1"
+    "victory-native": "^41.17.1",
+    "@react-native-community/datetimepicker": "8.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
