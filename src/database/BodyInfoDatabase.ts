@@ -76,6 +76,48 @@ export function useBodyInfoDatabase(db: SQLiteDatabase) {
       return null;
     }
   }
+
+  type RawProgressRow = {
+    measure_type: string;
+    measurement_date: string;
+    average_measurement: number;
+  };
+
+  type GroupedProgress = {
+    measure_type: string;
+    data: { date: string; average_measurement: number }[];
+  };
+
+  async function getBodyInfoProgress() {
+    const sql = `
+      SELECT measure_type, measurement_date, AVG(measurement) as average_measurement
+      FROM body_info
+      GROUP BY measure_type, measurement_date
+      ORDER BY measurement_date ASC;
+    `;
+    try {
+      const result = await db.getAllAsync<RawProgressRow>(sql);
+      const grouped = result.reduce<GroupedProgress[]>((acc, item) => {
+        const existing = acc.find((g) => g.measure_type === item.measure_type);
+        const dataPoint = {
+          date: item.measurement_date,
+          average_measurement: item.average_measurement,
+        };
+        if (existing) {
+          existing.data.push(dataPoint);
+        } else {
+          acc.push({ measure_type: item.measure_type, data: [dataPoint] });
+        }
+        return acc;
+      }, []);
+
+      return grouped;
+    } catch (error) {
+      console.error("Erro ao buscar progresso de medidas corporais:", error);
+      return [];
+    }
+  }
+
   return {
     getAllBodyInfo,
     getBodyInfo,
@@ -83,5 +125,6 @@ export function useBodyInfoDatabase(db: SQLiteDatabase) {
     updateBodyInfo,
     deleteBodyInfo,
     bodyInfo,
+    getBodyInfoProgress,
   };
 }

@@ -1,135 +1,80 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CartesianChart, Line } from "victory-native";
+import WorkoutProgressChart from "@/components/WorkoutProgressChart";
+import BodyInfoProgressChart from "@/components/BodyInfoProgressChart";
+import Tabs from "@/components/Tabs";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
-import { format } from "date-fns";
-import { useFont } from "@shopify/react-native-skia";
+import { useBodyInfoDatabase } from "@/database/BodyInfoDatabase";
+
+// Tipos para os dados esperados
+type WorkoutProgressData = {
+  workout_name: string;
+  data: { date: string; average_weight: number }[];
+};
+
+type BodyInfoProgressData = {
+  measure_type: string;
+  data: { date: string; average_measurement: number }[];
+};
 
 export default function Statistics() {
   const db = useSQLiteContext();
   const { getWorkoutsProgress } = useWorkoutDatabase(db);
-  const font = useFont(require("@/fonts/Roboto-Regular.ttf"));
+  const { getBodyInfoProgress } = useBodyInfoDatabase(db);
 
-  const [progressData, setProgressData] = useState<
-    { workout_name: string; data: { date: string; average_weight: number }[] }[]
-  >([]);
+  const [workoutsData, setWorkoutsData] = useState<WorkoutProgressData[]>([]);
+  const [bodyInfoData, setBodyInfoData] = useState<BodyInfoProgressData[]>([]);
+  const [activeTab, setActiveTab] = useState("carga");
 
   useEffect(() => {
     async function fetchData() {
       const workouts = await getWorkoutsProgress();
-      const processed = workouts.map((workout) => ({
-        workout_name: workout.workout_name,
-        data: [...workout.data],
-      }));
-      setProgressData(processed);
+      const bodyInfo = await getBodyInfoProgress();
+      setWorkoutsData(workouts || []);
+      setBodyInfoData(bodyInfo || []);
     }
-    fetchData();
-  }, [progressData]);
 
-  if (!font) {
-    return <Text style={{ textAlign: "center", marginTop: 50 }}>Carregando fonte...</Text>;
-  }
+    fetchData();
+  }, []);
+
+  const cargaTab = (
+    <View>
+      {workoutsData.map((workout, index) => (
+        <WorkoutProgressChart
+          key={index}
+          workout_name={workout.workout_name}
+          data={workout.data}
+        />
+      ))}
+    </View>
+  );
+
+  const medidasTab = (
+    <View>
+      {bodyInfoData.map((measure, index) => (
+        <BodyInfoProgressChart
+          key={index}
+          measure_type={measure.measure_type}
+          data={measure.data}
+        />
+      ))}
+    </View>
+  );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Estatísticas de Carga</Text>
-
-        {progressData.map((workout, index) => {
-          const chartData =
-            workout.data.length >= 2
-              ? workout.data.map((d) => ({
-                  day: new Date(d.date).getTime(),
-                  weight: d.average_weight,
-                }))
-              : workout.data.length === 1
-              ? [
-                  {
-                    day: new Date(workout.data[0].date).getTime(),
-                    weight: workout.data[0].average_weight,
-                  },
-                  {
-                    day:
-                      new Date(workout.data[0].date).getTime() + 1000 * 60 * 60,
-                    weight: workout.data[0].average_weight,
-                  },
-                ]
-              : [];
-
-          return (
-            <View
-              key={`${workout.workout_name}-${index}`}
-              style={styles.chartContainer}
-            >
-              <Text style={styles.workoutName}>{workout.workout_name}</Text>
-
-              <View style={{ width: "100%", height: 300 }}>
-                {chartData.length > 0 ? (
-                  <CartesianChart
-                    data={chartData}
-                    xKey="day"
-                    yKeys={["weight"]}
-                    axisOptions={{
-                      tickCount: 5,
-                      font: font,
-                      labelOffset: { x: 3, y: 5 },
-                      labelPosition: "inset",
-                      formatYLabel: (value) => `${value} kg`,
-                      formatXLabel: (value) =>
-                        format(new Date(value), "dd/MM"),
-                    }}
-                  >
-                    {({ points }) =>
-                      points.weight?.length > 0 ? (
-                        <Line
-                          points={points.weight}
-                          color="black"
-                          strokeWidth={4}
-                        />
-                      ) : null
-                    }
-                  </CartesianChart>
-                ) : (
-                  <Text style={styles.noData}>Sem dados suficientes</Text>
-                )}
-              </View>
-            </View>
-          );
-        })}
+    <SafeAreaView style={{ flex: 1, padding: 16, backgroundColor: "white" }}>
+      <ScrollView>
+        <Tabs
+          activeTab={activeTab}
+          onChangeTab={setActiveTab}
+          tabs={[
+            { key: "carga", title: "Carga", content: cargaTab },
+            { key: "medidas", title: "Medidas", content: medidasTab },
+          ]}
+        />
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "black",
-    marginBottom: 16,
-  },
-  chartContainer: {
-    marginBottom: 32,
-  },
-  workoutName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "black",
-    marginBottom: 8,
-  },
-  noData: {
-    textAlign: "center",
-    color: "gray",
-    fontStyle: "italic",
-    marginTop: 20,
-  },
-});
