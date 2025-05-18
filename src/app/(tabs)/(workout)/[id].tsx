@@ -16,6 +16,7 @@ import {
 import { Workout } from "@/types/Workout";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/Button";
+import { useTheme } from "@/components/ThemeProvider";
 
 export default function WorkoutExecution() {
   const { id } = useLocalSearchParams();
@@ -25,7 +26,7 @@ export default function WorkoutExecution() {
   const { getWorkoutDetail } = useWorkoutExerciseDatabase(db);
   const { createWorkoutInfo } = useWorkoutInfoDatabase(db);
   const { createWorkoutProgress } = useWorkoutProgressDatabase(db);
-
+  const theme = useTheme();
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [startTime, setStartTime] = useState<Date | null>(null);
@@ -81,17 +82,26 @@ export default function WorkoutExecution() {
 
   const toggleCompleted = (exerciseIndex: number, setIndex: number) => {
     const updated = [...exerciseState];
-    updated[exerciseIndex].inputs[setIndex].completed = !updated[exerciseIndex].inputs[setIndex].completed;
+    updated[exerciseIndex].inputs[setIndex].completed =
+      !updated[exerciseIndex].inputs[setIndex].completed;
     setExerciseState(updated);
   };
 
-  const updateWeight = (exerciseIndex: number, setIndex: number, weight: string) => {
+  const updateWeight = (
+    exerciseIndex: number,
+    setIndex: number,
+    weight: string
+  ) => {
     const updated = [...exerciseState];
     updated[exerciseIndex].inputs[setIndex].weight = weight;
     setExerciseState(updated);
   };
 
-  const updateReps = (exerciseIndex: number, setIndex: number, reps: string) => {
+  const updateReps = (
+    exerciseIndex: number,
+    setIndex: number,
+    reps: string
+  ) => {
     const updated = [...exerciseState];
     updated[exerciseIndex].inputs[setIndex].reps = reps;
     setExerciseState(updated);
@@ -107,7 +117,8 @@ export default function WorkoutExecution() {
       if (!startTime) return;
 
       const endTime = new Date();
-      const durationInMinutes = (endTime.getTime() - startTime.getTime()) / 60000;
+      const durationInMinutes =
+        (endTime.getTime() - startTime.getTime()) / 60000;
 
       try {
         const workout_info_id = await createWorkoutInfo({
@@ -144,49 +155,64 @@ export default function WorkoutExecution() {
   };
 
   return (
-    <ScrollView className="bg-white p-4 flex-1">
-      <Text className="text-2xl font-bold text-black text-center">
+    <ScrollView className="bg-white p-4 flex-1 dark:bg-gray-700">
+      <Text className="text-2xl font-bold text-black text-center dark:text-white">
         {workout?.name} {isRunning && `(${elapsed})`}
       </Text>
 
-      <Text className="mt-4 text-black font-bold">Exercícios</Text>
+      <Text className="mt-4 text-black font-bold dark:text-white">Exercícios</Text>
       <View className="border border-gray-300 rounded-md mt-2 p-2">
         {exerciseState.map((exercise, exerciseIndex) => (
-          <View key={exercise.exercise_id} className="mb-6 border-b border-gray-300 pb-4">
+          <View
+            key={exercise.exercise_id}
+            className="mb-6 border-b border-gray-300 pb-4"
+          >
             <View className="flex-row justify-between items-center">
-              <Text className="text-black font-semibold text-lg">
+              <Text className="text-black font-semibold text-lg dark:text-white">
                 {exercise.name} ({exercise.series} x {exercise.repetition})
               </Text>
               <TouchableOpacity onPress={() => alert(exercise.description)}>
-                <Ionicons name="help-circle-outline" size={20} color="black" />
+                <Ionicons name="help-circle-outline" size={20} color={theme.resolvedTheme === "dark" ? "white" : "gray"}  />
               </TouchableOpacity>
             </View>
 
-            <Text className="text-gray-500 mb-2">{exercise.body_part}</Text>
+            <Text className="text-gray-500 mb-2 dark:text-gray-300">{exercise.body_part}</Text>
 
             {exercise.inputs.map((input, setIndex) => (
-              <View key={setIndex} className="flex-row items-center justify-between mb-2">
-                <Text className="text-black">Série {setIndex + 1}</Text>
+              <View
+                key={setIndex}
+                className="flex-row items-center justify-between mb-2"
+              >
+                <Text className="text-black dark:text-white">Série {setIndex + 1}</Text>
                 <TextInput
-                  className={`border p-2 rounded-md text-black w-20 mx-2 ${input.completed ? "bg-gray-200" : "bg-white"}`}
+                  className={`border p-2 rounded-md text-black w-20 mx-2 ${
+                    input.completed ? "bg-gray-200" : "bg-white"
+                  }`}
                   placeholder="Reps"
                   keyboardType="numeric"
                   editable={!input.completed && isRunning}
                   value={input.reps}
-                  onChangeText={(value) => updateReps(exerciseIndex, setIndex, value)}
+                  onChangeText={(value) =>
+                    updateReps(exerciseIndex, setIndex, value)
+                  }
                 />
 
                 <TextInput
-                  className={`border p-2 rounded-md text-black w-24 ${input.completed ? "bg-gray-200" : "bg-white"}`}
+                  className={`border p-2 rounded-md text-black w-24 ${
+                    input.completed ? "bg-gray-200" : "bg-white"
+                  }`}
                   placeholder="Peso (kg)"
                   keyboardType="numeric"
                   editable={!input.completed && isRunning}
                   value={input.weight}
-                  onChangeText={(value) => updateWeight(exerciseIndex, setIndex, value)}
+                  onChangeText={(value) =>
+                    updateWeight(exerciseIndex, setIndex, value)
+                  }
                 />
 
-                
-                <TouchableOpacity onPress={() => toggleCompleted(exerciseIndex, setIndex)}>
+                <TouchableOpacity
+                  onPress={() => toggleCompleted(exerciseIndex, setIndex)}
+                >
                   <Ionicons
                     name={input.completed ? "checkbox" : "square-outline"}
                     size={24}

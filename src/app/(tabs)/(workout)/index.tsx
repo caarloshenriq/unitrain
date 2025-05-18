@@ -105,10 +105,10 @@ export default function Tab() {
             renderRightActions={() => renderRightActions(item)}
             onSwipeableOpen={() => handleSwipeStart(item.workout_id)}
           >
-            <TouchableOpacity className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center" onPress={() => router.push(`/(workout)/${item.workout_id}`)}>
+            <TouchableOpacity className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center" onPress={() => router.push(`/(workout)/${item.workout_id}`)}>
               <View>
-                <Text className="text-black font-bold text-lg">{item.name}</Text>
-                <Text className="text-gray-500">Dia: {getWeekdayName(item.weekday)}</Text>
+                <Text className="text-black font-bold text-lg dark:text-white">{item.name}</Text>
+                <Text className="text-gray-500 dark:text-gray-400">Dia: {getWeekdayName(item.weekday)}</Text>
               </View>
               <Ionicons name="chevron-forward" size={24} color={theme.resolvedTheme === "dark" ? "white" : "gray"} />
             </TouchableOpacity>
