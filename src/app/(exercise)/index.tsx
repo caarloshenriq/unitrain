@@ -76,13 +76,13 @@ export default function Exercises() {
     <View style={{ flexDirection: "row", height: "100%" }}>
       <TouchableOpacity
         onPress={() => router.push(`/form?id=${exercise_id}`)}
-        style={{ backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", width: 60, height: 72, borderRadius: 8  }}
+        style={{ backgroundColor: "#d1d5db", justifyContent: "center", alignItems: "center", width: 60, height: 72, borderRadius: 8 }}
       >
         <Ionicons name="create-outline" size={24} color="black" />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => handleDelete(exercise_id)}
-        style={{ backgroundColor: "#ef4444", justifyContent: "center", alignItems: "center", width: 60, height: 72, borderRadius: 8  }}
+        style={{ backgroundColor: "#ef4444", justifyContent: "center", alignItems: "center", width: 60, height: 72, borderRadius: 8 }}
       >
         <Ionicons name="trash-outline" size={24} color="white" />
       </TouchableOpacity>

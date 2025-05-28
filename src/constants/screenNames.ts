@@ -22,6 +22,10 @@ export function getTitleForRoute(routeName: string) {
             return "Treino";
         case "(workout)/newWorkout":
             return "Novo Treino";
+        case "(bodyInfo)":
+            return "Medidas Corporais";
+        case "(bodyInfo)/form":
+            return "Nova Medida Corporal";
         default:
             return "Unitrain";
     }

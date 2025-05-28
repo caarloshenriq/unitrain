@@ -76,7 +76,7 @@ function InnerLayout() {
             name="(bodyInfo)"
             options={{
                 title: "Dados Corporais",
-                headerShown: true
+                headerShown: false
             }}
           />
           <Drawer.Screen

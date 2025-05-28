@@ -7,34 +7,32 @@ export default function Layout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        // ...createHeaderOptions(resolvedTheme),
-        // headerTitleStyle: {
-        //     ...createHeaderOptions(resolvedTheme).headerTitleStyle,
-        //     fontWeight: "bold"
-        // }
       }}
     >
       <Stack.Screen
         options={{
-          title: "Informações Corporais",
-          headerShown: false,
+          title: "Medidas Corporais",
+          headerShown: true,
+          header: () => <AppHeader title={getTitleForRoute("(bodyInfo)")} />,
+
         }}
         name="index"
       />
 
       <Stack.Screen
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => <AppHeader title={getTitleForRoute("(bodyInfo)/form")} />,
         }}
         name="form"
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="(tabs)"
         options={{
           title: "Principal",
           headerShown: false,
         }}
-        />
+      /> */}
     </Stack>
   );
 }
