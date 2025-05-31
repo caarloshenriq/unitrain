@@ -36,32 +36,25 @@ export default function FormBodyInfo() {
     { label: "Braço", value: "braco" },
   ];
 
-  const unitOptions = [
-    { label: "Centímetros (cm)", value: "cm" },
-    { label: "Metros (m)", value: "m" },
-    { label: "Quilogramas (kg)", value: "kg" },
-  ];
-
-  useEffect(() => {
-    if (isEdit) {
-      (async () => {
-        const existing = await getBodyInfo(Number(id));
-        if (existing) {
-          const [type, extractedUnit] = existing.measure_type.split(" (");
-          setUnit(extractedUnit?.replace(")", "") || "cm");
-          setBodyInfo({ ...existing, measure_type: type });
-        }
-      })();
-    }
-  }, [id]);
+  const unitOptions = {
+    'peso': 'kg',
+    'altura': 'm',
+    'cintura': 'cm',
+    'quadril': 'cm',
+    'braco': 'cm',
+  };
 
   async function handleSave() {
     if (!bodyInfo.measure_type || !bodyInfo.measurement) return;
 
     try {
+    const unit = bodyInfo.measure_type in unitOptions
+      ? unitOptions[bodyInfo.measure_type as keyof typeof unitOptions]
+      : 'cm';
       const dataToSave = {
         ...bodyInfo,
         measure_type: `${bodyInfo.measure_type} (${unit})`,
+
       };
 
       if (isEdit) {
@@ -101,16 +94,6 @@ export default function FormBodyInfo() {
               ))}
             </Picker>
           </View>
-
-          <Text className="text-black dark:text-white">Unidade de Medida</Text>
-          <View className="border border-gray-300 rounded-md">
-            <Picker selectedValue={unit} onValueChange={setUnit}>
-              {unitOptions.map((option) => (
-                <Picker.Item key={option.value} label={option.label} value={option.value} />
-              ))}
-            </Picker>
-          </View>
-
           <Input
             label="Valor"
             type="number"
