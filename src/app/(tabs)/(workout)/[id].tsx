@@ -160,7 +160,9 @@ export default function WorkoutExecution() {
         {workout?.name} {isRunning && `(${elapsed})`}
       </Text>
 
-      <Text className="mt-4 text-black font-bold dark:text-white">Exercícios</Text>
+      <Text className="mt-4 text-black font-bold dark:text-white">
+        Exercícios
+      </Text>
       <View className="border border-gray-300 rounded-md mt-2 p-2">
         {exerciseState.map((exercise, exerciseIndex) => (
           <View
@@ -172,60 +174,98 @@ export default function WorkoutExecution() {
                 {exercise.name} ({exercise.series} x {exercise.repetition})
               </Text>
               <TouchableOpacity onPress={() => alert(exercise.description)}>
-                <Ionicons name="help-circle-outline" size={20} color={theme.resolvedTheme === "dark" ? "white" : "gray"}  />
+                <Ionicons
+                  name="help-circle-outline"
+                  size={20}
+                  color={theme.resolvedTheme === "dark" ? "white" : "gray"}
+                />
               </TouchableOpacity>
             </View>
 
-            <Text className="text-gray-500 mb-2 dark:text-gray-300">{exercise.body_part}</Text>
+            <Text className="text-gray-500 mb-2 dark:text-gray-300">
+              {exercise.body_part}
+            </Text>
 
-            {exercise.inputs.map((input, setIndex) => (
-              <View
-                key={setIndex}
-                className="flex-row items-center justify-between mb-2"
-              >
-                <Text className="text-black dark:text-white">Série {setIndex + 1}</Text>
-                <TextInput
-                  className={`border p-2 rounded-md text-black w-20 mx-2 ${
-                    input.completed ? "bg-gray-200" : "bg-white"
-                  }`}
-                  placeholder="Reps"
-                  keyboardType="numeric"
-                  editable={!input.completed && isRunning}
-                  value={input.reps}
-                  onChangeText={(value) =>
-                    updateReps(exerciseIndex, setIndex, value)
-                  }
-                />
+            {exercise.inputs.map((input, setIndex) => {
+              const previousCompleted =
+                setIndex === 0 || exercise.inputs[setIndex - 1].completed;
 
-                <TextInput
-                  className={`border p-2 rounded-md text-black w-24 ${
-                    input.completed ? "bg-gray-200" : "bg-white"
-                  }`}
-                  placeholder="Peso (kg)"
-                  keyboardType="numeric"
-                  editable={!input.completed && isRunning}
-                  value={input.weight}
-                  onChangeText={(value) =>
-                    updateWeight(exerciseIndex, setIndex, value)
-                  }
-                />
-
-                <TouchableOpacity
-                  onPress={() => toggleCompleted(exerciseIndex, setIndex)}
+              return (
+                <View
+                  key={setIndex}
+                  className="flex-row items-center justify-between mb-2"
                 >
-                  <Ionicons
-                    name={input.completed ? "checkbox" : "square-outline"}
-                    size={24}
-                    color={input.completed ? "green" : "gray"}
+                  <Text className="text-black dark:text-white">
+                    Série {setIndex + 1}
+                  </Text>
+                  <TextInput
+                    className={`border p-2 rounded-md w-20 mx-2 ${
+                      input.completed
+                        ? "bg-gray-200 text-black"
+                        : previousCompleted
+                        ? "bg-white dark:bg-gray-700 text-black dark:text-white"
+                        : "bg-gray-300 text-gray-500"
+                    }`}
+                    placeholder="Reps"
+                    keyboardType="numeric"
+                    editable={
+                      !input.completed && isRunning && previousCompleted
+                    }
+                    value={input.reps}
+                    onChangeText={(value) =>
+                      updateReps(exerciseIndex, setIndex, value)
+                    }
                   />
-                </TouchableOpacity>
-              </View>
-            ))}
+
+                  <TextInput
+                    className={`border p-2 rounded-md w-24 ${
+                      input.completed
+                        ? "bg-gray-200 text-black"
+                        : previousCompleted
+                        ? "bg-white dark:bg-gray-700 text-black dark:text-white"
+                        : "bg-gray-300 text-gray-500"
+                    }`}
+                    placeholder="Peso (kg)"
+                    keyboardType="numeric"
+                    editable={
+                      !input.completed && isRunning && previousCompleted
+                    }
+                    value={input.weight}
+                    onChangeText={(value) =>
+                      updateWeight(exerciseIndex, setIndex, value)
+                    }
+                  />
+
+                  <TouchableOpacity
+                    onPress={() =>
+                      previousCompleted
+                        ? toggleCompleted(exerciseIndex, setIndex)
+                        : Alert.alert(
+                            "Aviso",
+                            "Complete a série anterior antes!"
+                          )
+                    }
+                  >
+                    <Ionicons
+                      name={input.completed ? "checkbox" : "square-outline"}
+                      size={24}
+                      color={
+                        input.completed
+                          ? "green"
+                          : previousCompleted
+                          ? "gray"
+                          : "lightgray"
+                      }
+                    />
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
           </View>
         ))}
       </View>
 
-      <View className="mt-2">
+      <View className="mt-4 mb-6">
         <Button
           title={isRunning ? "Finalizar" : "Iniciar Treino"}
           onPress={handleStartStop}
