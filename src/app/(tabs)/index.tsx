@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, RefreshControl } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
 import { useEffect, useState } from "react";
@@ -9,18 +9,21 @@ export default function Tab() {
   const db = useSQLiteContext();
   const theme = useTheme();
   const workout = useWorkoutDatabase(db);
-
   const [workouts, setWorkouts] = useState<number[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function fetchWorkoutIds() {
+    const workoutsInfoIds = await workout.getLastSevenDaysWorkouts();
+    setWorkouts(workoutsInfoIds || []);
+  }
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchWorkoutIds();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
-    async function fetchWorkoutIds() {
-      const workoutsInfoIds = await workout.getLastSevenDaysWorkouts();
-
-      if (workoutsInfoIds != null && workoutsInfoIds.length > 0) {
-        setWorkouts(workoutsInfoIds);
-      }
-    }
-
     fetchWorkoutIds();
   }, []);
 
@@ -31,7 +34,10 @@ export default function Tab() {
         backgroundColor: theme.resolvedTheme === "dark" ? "#1f2937" : "#FFFFFF",
       }}
     >
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         {workouts.length === 0 && (
           <Text className="text-gray-500 dark:text-gray-400 mt-8 text-center">
             Nenhum treino encontrado.
