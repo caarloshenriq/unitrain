@@ -14,3 +14,11 @@ export type FormattedWorkout = {
   workout_name: string;
   data: { date: string; average_weight: number }[];
 };
+
+export type ResumeWorkoutType = {
+  workout_name: string;
+  session_date: string;
+  total_volume: number;
+  total_series: number;
+  distinct_exercises: number;
+}

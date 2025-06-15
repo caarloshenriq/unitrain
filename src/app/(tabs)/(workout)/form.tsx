@@ -13,6 +13,7 @@ import { BodyPart } from "@/types/BodyPart";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Button from "@/components/Button";
+import SelectExercise from "@/components/SelectExercise";
 
 export default function FormWorkout() {
   const db = useSQLiteContext();
@@ -33,6 +34,7 @@ export default function FormWorkout() {
   const [selectedExercises, setSelectedExercises] = useState<
     { exercise_id: number; series: string; repetitions: string; name: string }[]
   >([]);
+  const [showSelectExercise, setShowSelectExercise] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: id ? "Editar Treino" : "Novo Treino" });
@@ -67,6 +69,22 @@ export default function FormWorkout() {
     setSelectedBodyPart(bodyPart);
     const exercisesList = await getExerciseByBodyPart(bodyPart);
     setExercises(exercisesList || []);
+  }
+
+  function handleSelectExerciseConfirm(selectedIds: number[]) {
+    setSelectedExercises(
+      selectedIds.map(id => {
+        const found = selectedExercises.find(e => e.exercise_id === id);
+        return found || {
+          exercise_id: id,
+          series: "",
+          repetitions: "",
+          name: exercises.find(e => e.exercise_id === id)?.name || "",
+        };
+      })
+    );
+
+    setShowSelectExercise(false);
   }
 
   function toggleExerciseSelection(exercise_id: number) {
@@ -151,88 +169,66 @@ export default function FormWorkout() {
 
   return (
     <SafeAreaView className="p-4 flex-1 dark:bg-gray-700 bg-white">
-      <Input
-        label="Nome do Treino"
-        type="text"
-        value={name}
-        onChangeText={setName}
-      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Input
+          label="Nome do Treino"
+          type="text"
+          value={name}
+          onChangeText={setName}
+        />
 
-      <Text className="mt-4 text-black dark:text-white">Dia da semana</Text>
-      <View className="border border-gray-300 rounded-md mt-2">
-        <Picker selectedValue={weekday} onValueChange={setWeekday} className="dark:text-white text-black">
-          <Picker.Item label="Selecione o dia da semana" value="" />
-          <Picker.Item label="Domingo" value="1" />
-          <Picker.Item label="Segunda-feira" value="2" />
-          <Picker.Item label="Terça-feira" value="3" />
-          <Picker.Item label="Quarta-feira" value="4" />
-          <Picker.Item label="Quinta-feira" value="5" />
-          <Picker.Item label="Sexta-feira" value="6" />
-          <Picker.Item label="Sábado" value="7" />
-        </Picker>
-      </View>
+        <Text className="mt-4 text-black dark:text-white">Dia da semana</Text>
+        <View className="border border-gray-300 rounded-md mt-2">
+          <Picker selectedValue={weekday} onValueChange={setWeekday} className="dark:text-white text-black">
+            <Picker.Item label="Selecione o dia da semana" value="" />
+            <Picker.Item label="Domingo" value="1" />
+            <Picker.Item label="Segunda-feira" value="2" />
+            <Picker.Item label="Terça-feira" value="3" />
+            <Picker.Item label="Quarta-feira" value="4" />
+            <Picker.Item label="Quinta-feira" value="5" />
+            <Picker.Item label="Sexta-feira" value="6" />
+            <Picker.Item label="Sábado" value="7" />
+          </Picker>
+        </View>
 
-      <Text className="mt-4 text-black dark:text-white">Parte do corpo</Text>
-      <View className="border border-gray-300 rounded-md mt-2">
-        <Picker
-          selectedValue={selectedBodyPart}
-          onValueChange={(v) => v && handleBodyPartSelection(v)}
-        >
-          <Picker.Item label="Escolha uma parte do corpo" value="" />
-          {bodyParts.map((bp) => (
-            <Picker.Item
-              key={bp.body_part_id}
-              label={bp.name}
-              value={bp.body_part_id}
-            />
-          ))}
-        </Picker>
-      </View>
-      {selectedBodyPart && (
-        <>
-          <Text className="mt-6 text-black text-xl font-semibold dark:text-white">
-            Selecione os Exercícios
-          </Text>
+        <Text className="mt-4 text-black dark:text-white">Parte do corpo</Text>
+        <View className="border border-gray-300 rounded-md mt-2 mb-4">
+          <Picker
+            selectedValue={selectedBodyPart}
+            onValueChange={(v) => v && handleBodyPartSelection(v)}
+          >
+            <Picker.Item label="Escolha uma parte do corpo" value="" />
+            {bodyParts.map((bp) => (
+              <Picker.Item
+                key={bp.body_part_id}
+                label={bp.name}
+                value={bp.body_part_id}
+              />
+            ))}
+          </Picker>
+        </View>
 
-          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 bg-gray-50 dark:bg-gray-800 dark:border-gray-200">
-            {exercises.map((exercise) => {
-              const isSelected = selectedExercises.some(
-                (e) => e.exercise_id === exercise.exercise_id
-              );
+        {selectedBodyPart && (
+          <Button
+            title="Selecionar Exercícios"
+            onPress={() => setShowSelectExercise(true)}
+          />
+        )}
 
-              return (
-                <TouchableOpacity
-                  key={exercise.exercise_id}
-                  className={`p-3 border-b border-gray-300 ${
-                    isSelected ? "bg-gray-100" : ""
-                  }`}
-                  onPress={() => toggleExerciseSelection(exercise.exercise_id)}
-                >
-                  <View className="flex-row items-center">
-                    <Ionicons
-                      name={isSelected ? "checkbox" : "square-outline"}
-                      size={20}
-                      color={isSelected ? "black" : "gray"}
-                      style={{ marginRight: 10 }}
-                    />
-                    <Text className="text-black text-base dark:text-white">
-                      {exercise.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </>
-      )}
+        <SelectExercise
+          visible={showSelectExercise}
+          exercises={exercises}
+          selectedIds={selectedExercises.map(e => e.exercise_id)}
+          onClose={() => setShowSelectExercise(false)}
+          onConfirm={handleSelectExerciseConfirm}
+        />
 
-      {selectedExercises.length > 0 && (
-        <>
-          <Text className="mt-6 text-black text-xl font-semibold dark:text-white">
-            Séries e Repetições
-          </Text>
+        {selectedExercises.length > 0 && (
+          <>
+            <Text className="mt-6 text-black text-xl font-semibold dark:text-white">
+              Séries e Repetições
+            </Text>
 
-          <ScrollView className="border border-gray-300 rounded-lg mt-4 max-h-64 p-3 dark:bg-gray-800 dark:border-gray-200">
             {selectedExercises.map((exercise) => (
               <View
                 key={exercise.exercise_id}
@@ -286,16 +282,16 @@ export default function FormWorkout() {
                 </View>
               </View>
             ))}
-          </ScrollView>
-        </>
-      )}
+          </>
+        )}
 
-      <View className="mt-4">
-        <Button
-          title={id ? "Atualizar Treino" : "Salvar Treino"}
-          onPress={saveWorkout}
-        />
-      </View>
+        <View className="mt-4">
+          <Button
+            title={id ? "Atualizar Treino" : "Salvar Treino"}
+            onPress={saveWorkout}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

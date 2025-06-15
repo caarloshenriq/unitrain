@@ -1,11 +1,28 @@
-import { useRouter } from "expo-router";
+import { View, Text, ScrollView } from "react-native";
 import { useSQLiteContext } from "expo-sqlite";
-import { View, Text } from "react-native";
-import ExportDatabase from "@/components/ExportDB";
+import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
+import { useEffect, useState } from "react";
 import { useTheme } from "@/components/ThemeProvider";
+import ResumeWorkout from "@/components/ResumeWorkout";
 
 export default function Tab() {
+  const db = useSQLiteContext();
   const theme = useTheme();
+  const workout = useWorkoutDatabase(db);
+
+  const [workouts, setWorkouts] = useState<number[]>([]);
+
+  useEffect(() => {
+    async function fetchWorkoutIds() {
+      const workoutsInfoIds = await workout.getLastSevenDaysWorkouts();
+
+      if (workoutsInfoIds != null && workoutsInfoIds.length > 0) {
+        setWorkouts(workoutsInfoIds);
+      }
+    }
+
+    fetchWorkoutIds();
+  }, []);
 
   return (
     <View
@@ -14,18 +31,16 @@ export default function Tab() {
         backgroundColor: theme.resolvedTheme === "dark" ? "#1f2937" : "#FFFFFF",
       }}
     >
-      <View className="flex flex-row justify-between">
-        <Text
-          style={{
-            color: theme.resolvedTheme === "dark" ? "#FFFFFF" : "#000000",
-            fontSize: 18,
-            fontWeight: "bold",
-          }}
-        >
-          Home
-        </Text>
-        <ExportDatabase />
-      </View>
+      <ScrollView>
+        {workouts.length === 0 && (
+          <Text className="text-gray-500 dark:text-gray-400 mt-8 text-center">
+            Nenhum treino encontrado.
+          </Text>
+        )}
+
+        {workouts.map((id) => (<ResumeWorkout key={id} workoutsInfoId={id} />))}
+
+      </ScrollView>
     </View>
   );
 }

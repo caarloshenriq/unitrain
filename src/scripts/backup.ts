@@ -51,8 +51,7 @@ export async function importBackup(
 
   await db.withExclusiveTransactionAsync(async (txn) => {
     for (const tableName of Object.keys(tables) as (keyof BackupTables)[]) {
-      await txn.execAsync(`DELETE
-                                 FROM ${tableName}`);
+      await txn.execAsync(`DELETE FROM ${tableName}`);
     }
 
     for (const [tableName, rows] of Object.entries(tables) as [
@@ -64,8 +63,7 @@ export async function importBackup(
         const placeholders: string = columns.map(() => "?").join(", ");
         const values: any[] = Object.values(row);
 
-        const query: string = `INSERT INTO ${tableName} (${columns.join(", ")})
-                                       VALUES (${placeholders})`;
+        const query: string = `INSERT INTO ${tableName} (${columns.join(", ")}) VALUES (${placeholders})`;
 
         await txn.runAsync(query, values);
       }

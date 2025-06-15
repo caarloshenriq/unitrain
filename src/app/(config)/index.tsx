@@ -9,16 +9,12 @@ export default function Config() {
 
     return (
         <View className="bg-white dark:bg-gray-700 flex-1">
-            {/* <View className="bg-white flex-1"> */}
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="p-4">
                 <View className="flex justify-top gap-4 items-center flex-1">
                     <View className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full">
-                    {/* <View className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"> */}
                         <View className="flex-1">
                             <Text className="text-black dark:text-white font-bold text-lg">Tema</Text>
-                            {/* <Text className="text-black font-bold text-lg">Tema</Text> */}
                             <Text className="text-gray-500 dark:text-gray-400">Escolha entre claro ou escuro</Text>
-                            {/* <Text className="text-gray-500">Escolha entre claro ou escuro</Text> */}
                             <Text className="text-gray-500 dark:text-gray-400">Tema atual: {themeName}</Text>
                         </View>
                         <Switch
@@ -30,7 +26,6 @@ export default function Config() {
                     </View>
                     <Pressable
                         className="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"
-                        // className="bg-gray-100 p-4 rounded-lg mb-4 shadow-sm flex-row justify-between items-center w-full"
                         onPress={() => router.navigate("/(config)/backup")}
                     >
                         <View className="flex-1">

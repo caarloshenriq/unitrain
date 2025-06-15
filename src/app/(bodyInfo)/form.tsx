@@ -5,7 +5,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { ScrollView, View, Text, Platform, TouchableOpacity, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState, useEffect } from "react";
-import { useBodyInfoDatabase } from "@/database/BodyInfoDatabase";
+import { useBodyInfoDatabase } from "@/database/UseBodyInfoDatabase";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { BodyInfo } from "@/types/BodyInfo";

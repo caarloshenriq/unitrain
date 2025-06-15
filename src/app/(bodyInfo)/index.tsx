@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import { useTheme } from "@/components/ThemeProvider";
-import { useBodyInfoDatabase } from "@/database/BodyInfoDatabase";
+import { useBodyInfoDatabase } from "@/database/UseBodyInfoDatabase";
 import { BodyInfo } from "@/types/BodyInfo";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";

@@ -23,7 +23,7 @@ function InnerLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SQLiteProvider databaseName="unitrain.db" onInit={InitilizeDatabase}>
         <Drawer
-          screenOptions={({ route }) => ({
+          screenOptions={() => ({
             headerShown: false,
             drawerType: "front",
             drawerStyle: {

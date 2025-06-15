@@ -6,7 +6,7 @@ import WorkoutProgressChart from "@/components/WorkoutProgressChart";
 import BodyInfoProgressChart from "@/components/BodyInfoProgressChart";
 import Tabs from "@/components/Tabs";
 import { useWorkoutDatabase } from "@/database/UseWorkoutDatabase";
-import { useBodyInfoDatabase } from "@/database/BodyInfoDatabase";
+import { useBodyInfoDatabase } from "@/database/UseBodyInfoDatabase";
 
 // Tipos para os dados esperados
 type WorkoutProgressData = {

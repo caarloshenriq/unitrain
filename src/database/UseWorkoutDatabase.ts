@@ -1,4 +1,4 @@
-import { FormattedWorkout, ProgressResult, Workout } from "@/types/Workout";
+import { ResumeWorkoutType, Workout } from "@/types/Workout";
 import { SQLiteDatabase } from "expo-sqlite";
 import { useState } from "react";
 
@@ -116,6 +116,67 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
     }
   }
 
+  async function getResumeWorkout(workouts_info_id: number): Promise<ResumeWorkoutType | null> {
+    try {
+      if (workouts_info_id != null && workouts_info_id <= 0) {
+        console.error("ID do treino inválido: ", workouts_info_id);
+        return null;
+      }
+
+      const result = await db.getFirstAsync<ResumeWorkoutType>(
+        `
+        SELECT
+        wi.workouts_info_id,
+        w.name AS workout_name,
+        strftime('%d/%m/%Y', wi.date) AS session_date,
+        wi.time AS duration,
+        SUM(wp.weight * wp.repetition) AS total_volume,
+        COUNT(wp.workout_progress_id) AS total_series,
+        COUNT(DISTINCT wp.exercise_id) AS distinct_exercises
+        FROM workouts_info wi
+        JOIN workouts w ON wi.workout_id = w.workout_id
+        JOIN workout_progress wp ON wi.workouts_info_id = wp.workout_info_id
+        WHERE 0=0
+        AND wi.workouts_info_id = ?;
+        `
+        , [workouts_info_id]);
+
+      if (!result) {
+        console.error("Nenhum treino encontrado para o ID fornecido.");
+        return null;
+      }
+
+      return {
+        workout_name: result.workout_name,
+        session_date: result.session_date,
+        total_volume: result.total_volume || 0,
+        total_series: result.total_series || 0,
+        distinct_exercises: result.distinct_exercises || 0,
+      };
+    } catch (error) {
+      console.error("Erro ao buscar resumo do treino:", error);
+      return null;
+    }
+  }
+
+  async function getLastSevenDaysWorkouts(): Promise<number[] | null> {
+    try {
+      const results = await db.getAllAsync<{ workouts_info_id: number }>(
+        `
+        SELECT
+        wi.workouts_info_id
+        FROM workouts_info wi
+        ORDER BY wi.date DESC
+        LIMIT 7;
+        `);
+
+      return results.map((r) => r.workouts_info_id);
+    } catch (error) {
+      console.error("Erro ao buscar últimos sete dias de treino:", error);
+      return [];
+    }
+  }
+
   return {
     workouts,
     getWorkouts,
@@ -124,5 +185,7 @@ export function useWorkoutDatabase(db: SQLiteDatabase) {
     updateWorkout,
     deleteWorkout,
     getWorkoutsProgress,
+    getResumeWorkout,
+    getLastSevenDaysWorkouts,
   };
 }
