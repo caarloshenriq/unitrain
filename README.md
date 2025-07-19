@@ -1,5 +1,5 @@
 <img src="https://github.com/user-attachments/assets/bd65d55a-f7f3-4a01-83dc-2b4e5ba5271b" width="100" height="100"> <br/>
-# UniTrain
+# Lockfit
 
 **Gerencie seus treinos com liberdade, privacidade e praticidade.**
 
@@ -7,7 +7,7 @@
 
 ## Sobre o projeto
 
-O **UniTrain** é um aplicativo open-source focado em treinos offline, sem necessidade de login ou internet, oferecendo total privacidade aos usuários.
+O **Lockfit** é um aplicativo open-source focado em treinos offline, sem necessidade de login ou internet, oferecendo total privacidade aos usuários.
 
 **Principais características:**
 - 🔒 Sem login, sem rastreamento.
@@ -20,9 +20,9 @@ O **UniTrain** é um aplicativo open-source focado em treinos offline, sem neces
 
 ## Download
 
-Atualmente o UniTrain está disponível como APK para Android em fase Beta:
+Atualmente o Lockfit está disponível como APK para Android em fase Beta:
 
-👉 [Baixar UniTrain Beta
+👉 [Baixar Lockfit Beta
 
 > *Em breve disponível no F-Droid e Google Play!*
 
