@@ -22,7 +22,7 @@ O **Lockfit** é um aplicativo open-source focado em treinos offline, sem necess
 
 Atualmente o Lockfit está disponível como APK para Android em fase Beta:
 
-👉 [Baixar Lockfit Beta
+👉 [Baixar Lockfit Beta](https://unitrain.felipenegrelle.com.br/unitrain.apk)
 
 > *Em breve disponível no F-Droid e Google Play!*
 
